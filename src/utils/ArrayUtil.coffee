@@ -116,22 +116,23 @@ exports.utils.ArrayUtil = ArrayUtil =
 #  toArray:
 #  (arrayLikeObject) ->
 #    Array::slice.call(arrayLikeObject)
-#  random:
-#  (array, length = 1) ->
-#    if length is 1
-#      array[array.length * Math.random() >> 0]
-#    else
-#      array = Array::slice.call(array)
-#      array.splice(array.length * Math.random() >> 0, 1)[0] while length--
-#  shuffle:
-#  (array) ->
-#    i = array.length
-#    while i
-#      j = Math.random() * i >> 0
-#      v = array[--i]
-#      array[i] = array[j]
-#      array[j] = v
-#    array
+
+  random:(array, length = 1)->
+    if length is 1
+      array[array.length * Math.random() >> 0]
+    else
+      array = Array::slice.call(array)
+      array.splice(array.length * Math.random() >> 0, 1)[0] while length--
+
+  shuffle:(array)->
+    i = array.length
+    while i
+      j = Math.random() * i >> 0
+      v = array[--i]
+      array[i] = array[j]
+      array[j] = v
+    array
+
 #  unique:
 #  (array) ->
 #    storage = {}
