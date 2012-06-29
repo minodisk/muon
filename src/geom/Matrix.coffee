@@ -128,10 +128,10 @@ exports.geom.Matrix = class Matrix
   #     |@xy @yy @oy||0 1 pt.y| = |@xy @yy @xy*pt.x+@yy*pt.y+@oy|
   #     |0   0   1  ||0 0 1   |   |0   0   1                    |
   transformPoint: (pt)->
-    new Vector @xx * pt.x + @yx * pt.y + @ox, @xy * pt.x + @yy * pt.y + @oy
+    new Point @xx * pt.x + @yx * pt.y + @ox, @xy * pt.x + @yy * pt.y + @oy
 
   deltaTransformPoint: (pt)->
-    new Vector @xx * pt.x + @yx * pt.y, @xy * pt.x + @yy * pt.y
+    new Point @xx * pt.x + @yx * pt.y, @xy * pt.x + @yy * pt.y
 
   #     |1 0 tx||sx 0  0||c -s 0|   |sx 0  tx||c -s 0|   |sx*c -sx*s tx|
   #     |0 1 ty||0  sy 0||s c  0| = |0  sy ty||s c  0| = |sy*s sy*c  ty|
