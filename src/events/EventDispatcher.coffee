@@ -17,8 +17,7 @@ exports.events.EventDispatcher = class EventDispatcher
       priority  : priority
     @_events[type].sort @_sortOnPriorityInDescendingOrder
     @
-  addListener     : @addEventListener
-  on              : @addEventListener
+  on              : EventDispatcher::addEventListener
 
   _sortOnPriorityInDescendingOrder: (a, b)->
     b.priority - a.priority
@@ -32,6 +31,7 @@ exports.events.EventDispatcher = class EventDispatcher
       if storage.length is 0
         delete @_events[type]
     @
+  off                : EventDispatcher::removeEventListener
 
   dispatchEvent: (event)->
     unless event instanceof Event
@@ -47,4 +47,4 @@ exports.events.EventDispatcher = class EventDispatcher
             ), 0
           break if event._isPropagationStoppedImmediately
     !event._isDefaultPrevented
-  emit         : @dispatchEvent
+  emit         : EventDispatcher::dispatchEvent
