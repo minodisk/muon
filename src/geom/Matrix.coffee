@@ -43,8 +43,8 @@ exports.geom.Matrix = class Matrix
 
   # ## apply(matrix:*Matrix*):*void*
   # Applies the properties of specified *Matrix* object to this object.
-  apply: (matrix)->
-    @_apply matrix.xx, matrix.xy, matrix.yx, matrix.yy, matrix.ox, matrix.oy
+  apply: ({xx, xy, yx, yy, ox, oy})->
+    @_apply xx, xy, yx, yy, ox, oy
   _apply: (xx, xy, yx, yy, ox, oy)->
     @xx = xx
     @xy = xy
@@ -65,8 +65,8 @@ exports.geom.Matrix = class Matrix
   #     |xx yx ox||@xx @yx @ox|   |xx*@xx+yx*@xy xx*@yx+yx*@yy xx*@ox+yx*@oy+ox|
   #     |xy yy oy||@xy @yy @oy| = |xy*@xx+yy*@xy xy*@yx+yy*@yy xy*@ox+yy*@oy+oy|
   #     |0  0  1 ||0   0   1  |   |0             0             1               |
-  concat: (matrix)->
-    @_concat matrix.xx, matrix.xy, matrix.yx, matrix.yy, matrix.ox, matrix.oy
+  concat: ({xx, xy, yx, yy, ox, oy})->
+    @_concat xx, xy, yx, yy, ox, oy
   _concat:(xx, xy, yx, yy, ox, oy)->
     _xx = @xx
     _xy = @xy
@@ -87,10 +87,16 @@ exports.geom.Matrix = class Matrix
   translate: (tx, ty)->
     @_concat 1, 0, 0, 1, tx, ty
 
+  translatePoint: ({x, y})->
+    @translate x, y
+
   # ## scale(sx:*Number*, sy:*Number*):*Matrix*
   # Applies a scaling transformation to this object.
   scale: (sx, sy)->
     @_concat sx, 0, 0, sy, 0, 0
+
+  scalePoint: ({x, y})->
+    @scale x, y
 
   # ## rotate(angle:*Number*):*Matrix*
   # Applies a rotation transformation to this object.
@@ -127,11 +133,11 @@ exports.geom.Matrix = class Matrix
   #     |@xx @yx @ox||1 0 pt.x|   |@xx @yx @xx*pt.x+@yx*pt.y+@ox|
   #     |@xy @yy @oy||0 1 pt.y| = |@xy @yy @xy*pt.x+@yy*pt.y+@oy|
   #     |0   0   1  ||0 0 1   |   |0   0   1                    |
-  transformPoint: (pt)->
-    new Point @xx * pt.x + @yx * pt.y + @ox, @xy * pt.x + @yy * pt.y + @oy
+  transformPoint: ({x, y})->
+    new Point @xx * x + @yx * y + @ox, @xy * x + @yy * y + @oy
 
-  deltaTransformPoint: (pt)->
-    new Point @xx * pt.x + @yx * pt.y, @xy * pt.x + @yy * pt.y
+  deltaTransformPoint: ({x, y})->
+    new Point @xx * x + @yx * y, @xy * x + @yy * y
 
   #     |1 0 tx||sx 0  0||c -s 0|   |sx 0  tx||c -s 0|   |sx*c -sx*s tx|
   #     |0 1 ty||0  sy 0||s c  0| = |0  sy ty||s c  0| = |sy*s sy*c  ty|
