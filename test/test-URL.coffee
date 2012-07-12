@@ -1,43 +1,82 @@
 {muon} = require '../lib/muon.js'
 {URL} = muon.net
 url = require 'url'
-check = (test, str)->
-  obj = url.parse(str)
+check = (test, urlStr, parseQueryString = false)->
+  obj = url.parse(urlStr, parseQueryString)
+  if parseQueryString and obj.search is ''
+    delete obj.search
   obj.origin = "#{obj.protocol}#{if obj.slashes then '//' else ''}#{if obj.auth? then obj.auth + '@' else ''}#{obj.host}"
-  test.deepEqual URL.parse(str), obj
+  test.deepEqual URL.parse(urlStr, parseQueryString), obj
   test.done()
 
 exports.url =
 
   parse:
-    'without slash': (test)->
-      check test, 'http://example.com'
 
-    'with slash': (test)->
-      check test, 'http://example.com/'
+    'parseQueryString=false':
 
-    'node': (test)->
-      check test, 'http://user:pass@host.com:8080/p/a/t/h?query=string#hash'
+      'without slash': (test)->
+        check test, 'http://example.com'
 
-    'rfc 3986': (test)->
-      check test, 'foo://example.com:8042/over/there?name=ferret#nose'
+      'with slash': (test)->
+        check test, 'http://example.com/'
 
-    'rfc 2396':
+      'node': (test)->
+        check test, 'http://user:pass@host.com:8080/p/a/t/h?query=string#hash'
 
-      'ftp': (test)->
-        check test, 'ftp://ftp.is.co.za/rfc/rfc1808.txt'
+      'rfc 3986': (test)->
+        check test, 'foo://example.com:8042/over/there?name=ferret#nose'
 
-      'gopher': (test)->
-        check test, 'gopher://spinaltap.micro.umn.edu/00/Weather/California/Los%20Angeles'
+      'rfc 2396':
 
-      'http': (test)->
-        check test, 'http://www.math.uio.no/faq/compression-faq/part1.html'
+        'ftp': (test)->
+          check test, 'ftp://ftp.is.co.za/rfc/rfc1808.txt'
 
-      'mailto': (test)->
-        check test, 'mailto:mduerst@ifi.unizh.ch'
+        'gopher': (test)->
+          check test, 'gopher://spinaltap.micro.umn.edu/00/Weather/California/Los%20Angeles'
 
-      'news': (test)->
-        check test, 'news:comp.infosystems.www.servers.unix'
+        'http': (test)->
+          check test, 'http://www.math.uio.no/faq/compression-faq/part1.html'
 
-      'telnet': (test)->
-        check test, 'telnet://melvyl.ucop.edu/'
+        'mailto': (test)->
+          check test, 'mailto:mduerst@ifi.unizh.ch'
+
+        'news': (test)->
+          check test, 'news:comp.infosystems.www.servers.unix'
+
+        'telnet': (test)->
+          check test, 'telnet://melvyl.ucop.edu/'
+
+    'parseQueryString=true':
+
+      'without slash': (test)->
+        check test, 'http://example.com', true
+
+      'with slash': (test)->
+        check test, 'http://example.com/', true
+
+      'node': (test)->
+        check test, 'http://user:pass@host.com:8080/p/a/t/h?query=string#hash', true
+
+      'rfc 3986': (test)->
+        check test, 'foo://example.com:8042/over/there?name=ferret#nose', true
+
+      'rfc 2396':
+
+        'ftp': (test)->
+          check test, 'ftp://ftp.is.co.za/rfc/rfc1808.txt', true
+
+        'gopher': (test)->
+          check test, 'gopher://spinaltap.micro.umn.edu/00/Weather/California/Los%20Angeles', true
+
+        'http': (test)->
+          check test, 'http://www.math.uio.no/faq/compression-faq/part1.html', true
+
+        'mailto': (test)->
+          check test, 'mailto:mduerst@ifi.unizh.ch', true
+
+        'news': (test)->
+          check test, 'news:comp.infosystems.www.servers.unix', true
+
+        'telnet': (test)->
+          check test, 'telnet://melvyl.ucop.edu/', true

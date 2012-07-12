@@ -2,9 +2,11 @@ exports.net.URL = URL =
 
   REG_EXP: /^((\w+:)(\/*)?(?:([^@]*)@)?(([^\/]+?)(?::(\d*))?))((\/[^\?#]*)?(\?([^#]*)?)?)?(#.*)?$/
 
-  parse: (url)->
-    [href, origin, protocol, slashes, auth, host, hostname, port, path, pathname, search, query, hash] = url.match URL.REG_EXP
+  parse: (urlStr, parseQueryString = false)->
+    [href, origin, protocol, slashes, auth, host, hostname, port, path, pathname, search, query, hash] = urlStr.match URL.REG_EXP
     obj = {href, origin, protocol, host, hostname}
+    if parseQueryString
+      query = QueryString.parse query
     opt = {auth, port, path, pathname, search, query, hash}
     if slashes?
       obj.slashes = true
