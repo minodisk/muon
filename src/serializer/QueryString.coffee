@@ -7,7 +7,7 @@ exports.serializer.QueryString = QueryString =
     tokens.join '&'
 
   parse: (query)->
-    if query is ''
+    unless query
       return {}
     tokens = query.split '&'
     if tokens.length is 0
