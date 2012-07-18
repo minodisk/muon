@@ -8,7 +8,7 @@
 
 This library is compiled with [coffeemill](https://github.com/minodisk/coffeemill) in [Node.js](http://nodejs.org/).
 
-    $ coffeemill -m -j muon
+    $ coffeemill -m -j muon -t test
 
 ## classes
 
