@@ -47,7 +47,7 @@ exports.geom.Rectangle = class Rectangle
     @x < x < @x + @width and @y < y < @y + @height
 
   containsPoint: (point)->
-    @x < point.x < @x + @width and @y < point.y < @y + @height
+    @contains(point.x, point.y)
 
   contain: (x, y)->
     if x < @x
@@ -61,6 +61,9 @@ exports.geom.Rectangle = class Rectangle
     else if y > @y + @height
       @height = y - @y
     @
+
+  containPoint: (point)->
+    @contain(point.x, point.y)
 
   # ## offset(dx:*Number*, dy:*Number*):*Rectangle*
   # Add x and y to this object.
