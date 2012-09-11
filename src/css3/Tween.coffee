@@ -29,7 +29,6 @@ exports.css3.Tween = Tween =
           elem.style.webkitTransition = transition.toString()
           callback?()
         elem.addEventListener 'webkitTransitionEnd', listener
-        console.log transition, transition.toString()
         elem.style.webkitTransition = transition.toString()
         for name, value of propList
           elem.style[name] = value
