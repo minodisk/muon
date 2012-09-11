@@ -1,8 +1,3 @@
-###
-GitHub : https://github.com/minodisk/muon
-Author : Daisuke Mino
-License: MIT License
-###
 window = @
 if typeof window.muon is 'undefined' then window.muon = {}
 if typeof window.muon.dom is 'undefined' then window.muon.dom = {}

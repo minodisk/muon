@@ -8,7 +8,7 @@
 
 This library is compiled with [coffeemill](https://github.com/minodisk/coffeemill) in [Node.js](http://nodejs.org/).
 
-    $ coffeemill -m -j muon -t test
+    $ coffeemill -m -j muon -c COPYRIGHT -t test
 
 ## classes
 
@@ -29,13 +29,17 @@ This library is compiled with [coffeemill](https://github.com/minodisk/coffeemil
     * ColorMatrix
     * Matrix
     * Point
+    * Rectangle
 * net
     * HTTP
+    * URL
 * serializer
     * JSON
     * QueryString
 * utils
     * ArrayUtil
+    * CSSUtil
+    * EventUtil
     * MathUtil
     * ObjectUtil
     * StringUtil
