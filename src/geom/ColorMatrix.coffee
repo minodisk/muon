@@ -28,7 +28,7 @@ _RAD = Math.PI / 180
 
 exports.geom.ColorMatrix = class ColorMatrix
 
-  constructor: (matrix) ->
+  constructor: (matrix)->
     if matrix instanceof ColorMatrix
       @matrix = matrix.matrix.concat()
     else if Array.isArray(matrix)
@@ -59,7 +59,7 @@ exports.geom.ColorMatrix = class ColorMatrix
   reset: ->
     @matrix = _IDENTITY.concat()
 
-  concat: (src) ->
+  concat: (src)->
     dst = @matrix
     out = []
     for y in [0...4]
@@ -78,7 +78,7 @@ exports.geom.ColorMatrix = class ColorMatrix
       0, 0, 0, 1, 0
     ]
 
-  adjustSaturation: (s) ->
+  adjustSaturation: (s)->
     irlum = -s * _LUMA_R
     iglum = -s * _LUMA_G
     iblum = -s * _LUMA_B
@@ -90,7 +90,8 @@ exports.geom.ColorMatrix = class ColorMatrix
       0, 0, 0, 1, 0
     ]
 
-  adjustContrast: (r, g = r, b = r) ->
+
+  adjustContrast: (r, g = r, b = r)->
     @concat [
       1 + r, 0, 0, 0, -0x80 * r
       0, 1 + g, 0, 0, -0x80 * g
@@ -98,7 +99,7 @@ exports.geom.ColorMatrix = class ColorMatrix
       0, 0, 0, 1, 0
     ]
 
-  adjustBrightness: (r, g = r, b = r) ->
+  adjustBrightness: (r, g = r, b = r)->
     @concat [
       1, 0, 0, 0, 0xff * r
       0, 1, 0, 0, 0xff * g
@@ -106,7 +107,7 @@ exports.geom.ColorMatrix = class ColorMatrix
       0, 0, 0, 1, 0
     ]
 
-  adjustHue: (degree) ->
+  adjustHue: (degree)->
     R = _LUMA_R
     G = _LUMA_G
     B = _LUMA_B
@@ -123,7 +124,7 @@ exports.geom.ColorMatrix = class ColorMatrix
       0, 0, 0, 1, 0
     ]
 
-  rotateHue: (degree) ->
+  rotateHue: (degree)->
     @_initHue()
     @concat @_preHue.matrix
     @rotateBlue degree
@@ -137,7 +138,7 @@ exports.geom.ColorMatrix = class ColorMatrix
       _LUMA_R, _LUMA_G, _LUMA_B, 0, 0
     ]
 
-  adjustAlphaContrast: (amount) ->
+  adjustAlphaContrast: (amount)->
     @concat [
       1, 0, 0, 0, 0
       0, 1, 0, 0, 0
@@ -145,7 +146,7 @@ exports.geom.ColorMatrix = class ColorMatrix
       0, 0, 0, amount + 1, -0x80 * amount
     ]
 
-  colorize: (rgb, amount = 1) ->
+  colorize: (rgb, amount = 1)->
     R = _LUMA_R
     G = _LUMA_G
     B = _LUMA_B
@@ -160,10 +161,10 @@ exports.geom.ColorMatrix = class ColorMatrix
       0, 0, 0, 1, 0
     ]
 
-  setChannels: (r = 1, g = 2, b = 4, a = 8) ->
+  setChannels: (r = 1, g = 2, b = 4, a = 8)->
     rf = (if ((r & 1) is 1) then 1 else 0) + (if ((r & 2) is 2) then 1 else 0) + (if ((r & 4) is 4) then 1 else 0) + (if ((r & 8) is 8) then 1 else 0)
     rf = (1 / rf) if rf > 0
-    gf = (if ((g & 1) is 1) then 1 else 0) + (if ((g & 2) is 2) then 1 else 0) + (if ((g & 4) is 4) then 1 else 0) + (if ((g & 8) is 8) then  1  else 0)
+    gf = (if ((g & 1) is 1) then 1 else 0) + (if ((g & 2) is 2) then 1 else 0) + (if ((g & 4) is 4) then 1 else 0) + (if ((g & 8) is 8) then  1 else 0)
     gf = (1 / gf) if gf > 0
     bf = (if ((b & 1) is 1) then 1 else 0) + (if ((b & 2) is 2) then 1 else 0) + (if ((b & 4) is 4) then 1 else 0) + (if ((b & 8) is 8) then 1 else 0)
     bf = (1 / bf) if bf > 0
@@ -176,12 +177,12 @@ exports.geom.ColorMatrix = class ColorMatrix
       (if ((a & 1) is 1) then af else 0), (if ((a & 2) is 2) then af else 0), (if ((a & 4) is 4) then af else 0), (if ((a & 8) is 8) then af else 0), 0
     ]
 
-  blend: (matrix, amount) ->
+  blend: (matrix, amount)->
     for v, i in matrix.matrix
       @matrix[i] = @matrix[i] * (1 - amount) + v * amount
     @
 
-  average: (r = _ONETHIRD, g = _ONETHIRD, b = _ONETHIRD) ->
+  average: (r = _ONETHIRD, g = _ONETHIRD, b = _ONETHIRD)->
     @concat [
       r, g, b, 0, 0
       r, g, b, 0, 0
@@ -189,7 +190,7 @@ exports.geom.ColorMatrix = class ColorMatrix
       0, 0, 0, 1, 0
     ]
 
-  threshold: (threshold, factor = 0x100) ->
+  threshold: (threshold, factor = 0x100)->
     R = factor * _LUMA_R
     G = factor * _LUMA_G
     B = factor * _LUMA_B
@@ -212,7 +213,7 @@ exports.geom.ColorMatrix = class ColorMatrix
       0, 0, 0, 1, 0
     ]
 
-  randomize: (amount = 1) ->
+  randomize: (amount = 1)->
     inv_amount = (1 - amount)
     r1 = (inv_amount + (amount * (Math.random() - Math.random())))
     g1 = (amount * (Math.random() - Math.random()))
@@ -233,7 +234,7 @@ exports.geom.ColorMatrix = class ColorMatrix
       0, 0, 0, 1, 0
     ]
 
-  setMultiplicators: (r = 1, g = 1, b = 1, a = 1) ->
+  setMultiplicators: (r = 1, g = 1, b = 1, a = 1)->
     @concat [
       r, 0, 0, 0, 0
       0, g, 0, 0, 0
@@ -241,13 +242,13 @@ exports.geom.ColorMatrix = class ColorMatrix
       0, 0, 0, a, 0
     ]
 
-  clearChannels: (r = false, g = false, b = false, a = false) ->
+  clearChannels: (r = false, g = false, b = false, a = false)->
     @matrix[0] = @matrix[1] = @matrix[2] = @matrix[3] = @matrix[4] = 0 if r
     @matrix[5] = @matrix[6] = @matrix[7] = @matrix[8] = @matrix[9] = 0 if g
     @matrix[10] = @matrix[11] = @matrix[12] = @matrix[13] = @matrix[14] = 0 if b
     @matrix[15] = @matrix[16] = @matrix[17] = @matrix[18] = @matrix[19] = 0 if a
 
-  thresholdAlpha: (threshold, factor = 0x100) ->
+  thresholdAlpha: (threshold, factor = 0x100)->
     @concat [
       1, 0, 0, 0, 0
       0, 1, 0, 0, 0
@@ -271,7 +272,7 @@ exports.geom.ColorMatrix = class ColorMatrix
       0, 0, 0, -1, 0xff
     ]
 
-  rgb2Alpha: (r, g, b) ->
+  rgb2Alpha: (r, g, b)->
     @concat [
       0, 0, 0, 0, 0xff
       0, 0, 0, 0, 0xff
@@ -279,7 +280,7 @@ exports.geom.ColorMatrix = class ColorMatrix
       r, g, b, 0, 0
     ]
 
-  setAlpha: (alpha) ->
+  setAlpha: (alpha)->
     @concat [
       1, 0, 0, 0, 0
       0, 1, 0, 0, 0
@@ -287,16 +288,16 @@ exports.geom.ColorMatrix = class ColorMatrix
       0, 0, 0, alpha, 0
     ]
 
-  rotateRed: (degree) ->
+  rotateRed: (degree)->
     @_rotateColor degree, 2, 1
 
-  rotateGreen: (degree) ->
+  rotateGreen: (degree)->
     @_rotateColor degree, 0, 2
 
-  rotateBlue: (degree) ->
+  rotateBlue: (degree)->
     @_rotateColor degree, 1, 0
 
-  _rotateColor: (degree, x, y) ->
+  _rotateColor: (degree, x, y)->
     degree *= _RAD
     mat = _IDENTITY.concat()
     mat[x + x * 5] = mat[y + y * 5] = Math.cos degree
@@ -304,22 +305,22 @@ exports.geom.ColorMatrix = class ColorMatrix
     mat[x + y * 5] = -Math.sin degree
     @concat mat
 
-  shearRed: (green, blue) ->
+  shearRed: (green, blue)->
     @_shearColor 0, 1, green, 2, blue
 
-  shearGreen: (red, blue) ->
+  shearGreen: (red, blue)->
     @_shearColor 1, 0, red, 2, blue
 
-  shearBlue: (red, green) ->
+  shearBlue: (red, green)->
     @_shearColor 2, 0, red, 1, green
 
-  _shearColor: (x, y1, d1, y2, d2) ->
+  _shearColor: (x, y1, d1, y2, d2)->
     mat = _IDENTITY.concat()
     mat[y1 + x * 5] = d1
     mat[y2 + x * 5] = d2
     @concat mat
 
-  applyColorDeficiency: (type) ->
+  applyColorDeficiency: (type)->
     # the values of this method are copied from http:#www.nofunc.com/Color_Matrix_Library/
     switch type
       when 'Protanopia'
@@ -348,7 +349,7 @@ exports.geom.ColorMatrix = class ColorMatrix
         break
       when 'Deuteranomaly'
         @concat [
-          0.8, 0.2, 0.0, 0.0, 0.0,
+          0.8, 0.2, 0.0, 0.0, 0.0
           0.258, 0.742, 0.0, 0.0, 0.0
           0.0, 0.142, 0.858, 0.0, 0.0
           0.0, 0.0, 0.0, 1.0, 0.0
@@ -365,29 +366,29 @@ exports.geom.ColorMatrix = class ColorMatrix
       when 'Tritanomaly'
         @concat [
           0.967, 0.033, 0.0, 0.0, 0.0
-        0.0, 0.733, 0.267, 0.0, 0.0
-        0.0, 0.183, 0.817, 0.0, 0.0
-        0.0, 0.0, 0.0, 1.0, 0.0
+          0.0, 0.733, 0.267, 0.0, 0.0
+          0.0, 0.183, 0.817, 0.0, 0.0
+          0.0, 0.0, 0.0, 1.0, 0.0
         ]
         break
       when 'Achromatopsia'
         @concat [
           0.299, 0.587, 0.114, 0.0, 0.0
-        0.299, 0.587, 0.114, 0.0, 0.0
-        0.299, 0.587, 0.114, 0.0, 0.0
-        0.0, 0.0, 0.0, 1.0, 0.0
+          0.299, 0.587, 0.114, 0.0, 0.0
+          0.299, 0.587, 0.114, 0.0, 0.0
+          0.0, 0.0, 0.0, 1.0, 0.0
         ]
         break
       when 'Achromatomaly'
         @concat [
           0.618, 0.320, 0.062, 0.0, 0.0
-        0.163, 0.775, 0.062, 0.0, 0.0
-        0.163, 0.320, 0.516, 0.0, 0.0
-        0.0, 0.0, 0.0, 1.0, 0.0
+          0.163, 0.775, 0.062, 0.0, 0.0
+          0.163, 0.320, 0.516, 0.0, 0.0
+          0.0, 0.0, 0.0, 1.0, 0.0
         ]
         break
 
-  applyMatrix: (rgba) ->
+  applyMatrix: (rgba)->
     a = ( rgba >>> 24 ) & 0xff
     r = ( rgba >>> 16 ) & 0xff
     g = ( rgba >>> 8 ) & 0xff
@@ -410,7 +411,7 @@ exports.geom.ColorMatrix = class ColorMatrix
 
     a2 << 24 | r2 << 16 | g2 << 8 | b2
 
-  transformVector: (values) ->
+  transformVector: (values)->
     throw new TypeError "values length isn't 4" if values.length isnt 4
     m = @matrix
     sR = values[0]
@@ -437,9 +438,9 @@ exports.geom.ColorMatrix = class ColorMatrix
       @_preHue.rotateGreen(-greenRotation)
 
       lum = [
-        _LUMA_R2,
-        _LUMA_G2,
-        _LUMA_B2,
+        _LUMA_R2
+        _LUMA_G2
+        _LUMA_B2
         1.0
       ]
 
@@ -451,6 +452,6 @@ exports.geom.ColorMatrix = class ColorMatrix
       @_preHue.shearBlue red, green
 
       @_postHue = new ColorMatrix()
-      @_postHue.shearBlue -red, -green
+      @_postHue.shearBlue(-red, -green)
       @_postHue.rotateGreen greenRotation
       @_postHue.rotateRed -45.0

@@ -2,8 +2,8 @@ exports.filters.ColorMatrixFilter = class ColorMatrixFilter
 
   constructor: (@matrix)->
 
-  scan: (src, dst)->
-    m = @matrix.matrix
+  scan       : (src, dst)->
+    m = @matrix
     s = src.data
     d = dst.data
     for i in [0...d.length] by 4

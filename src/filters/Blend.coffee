@@ -8,8 +8,6 @@ _max = Math.max
 exports.filters.Blend = Blend =
 
   scan: (dst, src, method)->
-    method = @[method]
-    throw new TypeError "#{ method } isn't defined." unless method?
     d = dst.data
     s = src.data
     for i in [0...d.length] by 4

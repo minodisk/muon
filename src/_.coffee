@@ -8,5 +8,6 @@ if typeof window.muon.geom is 'undefined' then window.muon.geom = {}
 if typeof window.muon.history is 'undefined' then window.muon.history = {}
 if typeof window.muon.net is 'undefined' then window.muon.net = {}
 if typeof window.muon.serializer is 'undefined' then window.muon.serializer = {}
+if typeof window.muon.timers is 'undefined' then window.muon.timers = {}
 if typeof window.muon.utils is 'undefined' then window.muon.utils = {}
 exports = window.muon
