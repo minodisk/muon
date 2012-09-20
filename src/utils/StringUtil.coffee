@@ -1,5 +1,38 @@
 exports.utils.StringUtil = StringUtil =
 
+  dump: (obj)->
+    format = (obj, indent, prefix = '', postfix = '')->
+      i = indent
+      indentChars = ''
+      while i--
+        indentChars += '  ';
+      postfix += '\n'
+      indent += 1
+      body = ''
+      switch typeof obj
+        when 'function'
+          body += "function () { [snip] }"
+        when 'string'
+          body += "#{indentChars}#{prefix}\"#{obj}\"#{postfix}"
+        when 'number'
+          body += "#{indentChars}#{prefix}#{obj}#{postfix}"
+        else
+          if ArrayUtil.isArray obj
+            body += "#{indentChars}#{prefix}[\n"
+            len = obj.length
+            for val, i in obj
+              body += "#{format(val, indent, i + ': ', (if i is len - 1 then '' else ','))}"
+            body += "#{indentChars}]#{postfix}"
+          else
+            body += "#{indentChars}#{prefix}{\n"
+            len = ObjectUtil.keys(obj).length
+            i = 0
+            for key, val of obj
+              body += "#{format(val, indent, key + ': ', (if i is len - 1 then '' else ','))}"
+              i += 1
+            body += "#{indentChars}}#{postfix}"
+    format obj, 0
+
 #  split:
 #  if 'a'.split(/(a)/).length isnt 0
 #    (string, separator, limit) ->
