@@ -33,6 +33,10 @@ exports.utils.StringUtil = StringUtil =
             body += "#{indentChars}}#{postfix}"
     format obj, 0
 
+  parseBoolean: (str)->
+    str = str.toLowerCase()
+    str is 'true' or str is '1'
+
 #  split:
 #  if 'a'.split(/(a)/).length isnt 0
 #    (string, separator, limit) ->
