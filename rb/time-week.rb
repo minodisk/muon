@@ -1,0 +1,38 @@
+def printStrftime(y, m, d)
+  print Time.local(y, m, d).strftime("%U, %V, %W\n")
+end
+
+def printStrftimeWithYear(y)
+  print "[\n"
+  printStrftime(y, 1, 1)
+  printStrftime(y, 1, 7)
+  printStrftime(y, 1, 11)
+  printStrftime(y, 12, 21)
+  printStrftime(y, 12, 25)
+  printStrftime(y, 12, 31)
+  print "]\n"
+end
+
+printStrftimeWithYear(1998)
+printStrftimeWithYear(1999)
+printStrftimeWithYear(2000)
+printStrftimeWithYear(2001)
+printStrftimeWithYear(2002)
+printStrftimeWithYear(2003)
+printStrftimeWithYear(2004)
+printStrftimeWithYear(2005)
+printStrftimeWithYear(2006)
+printStrftimeWithYear(2007)
+printStrftimeWithYear(2008)
+printStrftimeWithYear(2009)
+printStrftimeWithYear(2010)
+printStrftimeWithYear(2011)
+printStrftimeWithYear(2012)
+printStrftimeWithYear(2013)
+printStrftimeWithYear(2014)
+printStrftimeWithYear(2015)
+printStrftimeWithYear(2016)
+printStrftimeWithYear(2017)
+printStrftimeWithYear(2018)
+printStrftimeWithYear(2019)
+printStrftimeWithYear(2020)
