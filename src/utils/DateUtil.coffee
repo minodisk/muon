@@ -1,5 +1,7 @@
 exports.utils.DateUtil = DateUtil =
 
+  _R_PATTERNS: /%[AaBbCcDdeFHhIjkLlMmNnPpRrSsTtUuvVWwXxYyZz%]/g
+
   keywords:
     A: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     a: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -11,7 +13,7 @@ exports.utils.DateUtil = DateUtil =
   _getValue: (date, name, isUTC)->
     date["get#{if isUTC then 'UTC' else ''}#{name}"]()
 
-  _toString: (date, pattern, isUTC)->
+  _stringify: (date, pattern, isUTC)->
     {keywords, _getValue, stringify, getDays, getSundayWeeks, getMondayWeeks, getISO8601Weeks} = DateUtil
     {padLeft} = StringUtil
     padZero = (num)->
@@ -111,13 +113,19 @@ exports.utils.DateUtil = DateUtil =
         "#{sign}#{padZero minutes / 60}#{padZero minutes % 60}"
       when '%%' #%自身
         '%'
+      else
+        throw new Error "Unrecognized pattern '#{pattern}'"
 
   stringify: (date, format = '%a %b %d %T %Z %Y', isUTC = false)->
-    format.replace /%[%\w]/g, (pattern)->
-      DateUtil._toString date, pattern, isUTC
+    format.replace DateUtil._R_PATTERNS, (pattern)->
+      DateUtil._stringify date, pattern, isUTC
+
+  _parse: (char, pattern, isUTC)->
+
 
   parse: (str, format, isUTC = false)->
-
+    format.replace DateUtil._R_PATTERNS, (pattern)->
+      console.log arguments
 
   getDays: (date)->
     newYearsDay = new Date date.getFullYear(), 0, 1

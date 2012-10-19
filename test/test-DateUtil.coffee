@@ -259,6 +259,57 @@ exports.DateUtil =
         test.strictEqual stringify(new Date(2010, 9 - 1, 5, 2, 3, 6), '%Y-%m-%d %H:%M:%S'), '2010-09-05 02:03:06'
         test.done()
 
+  parse:
+
+    local:
+
+      pattern: (test)->
+        str = new Date(2012, 4 - 1, 8, 9, 4, 3)
+
+        test.strictEqual parse(str, '%A'), 'Sunday', '%A'
+        test.strictEqual parse(str, '%a'), 'Sun', '%a'
+        test.strictEqual parse(str, '%B'), 'April', '%B'
+        test.strictEqual parse(str, '%b'), 'Apr', '%b'
+        test.strictEqual parse(str, '%C'), '20', '%C'
+        test.strictEqual parse(str, '%c'), 'Sun Apr  8 09:04:03 2012', '%c'
+        test.strictEqual parse(str, '%D'), '04/08/12', '%D'
+        test.strictEqual parse(str, '%d'), '08', '%d'
+        test.strictEqual parse(str, '%e'), ' 8', '%e'
+        test.strictEqual parse(str, '%F'), '2012-04-08', '%F'
+        test.strictEqual parse(str, '%H'), '09', '%H'
+        test.strictEqual parse(str, '%h'), 'Apr', '%h'
+        test.strictEqual parse(str, '%I'), '09', '%I'
+        test.strictEqual parse(str, '%j'), '099', '%j'
+        test.strictEqual parse(str, '%k'), ' 9', '%k'
+        test.strictEqual parse(str, '%L'), '023', '%L'
+        test.strictEqual parse(str, '%l'), ' 9', '%l'
+        test.strictEqual parse(str, '%M'), '04', '%M'
+        test.strictEqual parse(str, '%m'), '04', '%m'
+        test.strictEqual parse(str, '%n'), '\n', '%n'
+        test.strictEqual parse(str, '%N'), '023', '%N'
+        test.strictEqual parse(str, '%P'), 'am', '%P'
+        test.strictEqual parse(str, '%p'), 'AM', '%p'
+        test.strictEqual parse(str, '%R'), '09:04', '%R'
+        test.strictEqual parse(str, '%r'), '09:04:03 AM', '%r'
+        test.strictEqual parse(str, '%S'), '03', '%S'
+        test.strictEqual parse(str, '%s'), '1333843443', '%s'
+        test.strictEqual parse(str, '%T'), '09:04:03', '%T'
+        test.strictEqual parse(str, '%t'), '\t', '%t'
+        test.strictEqual parse(str, '%U'), '15', '%U'
+        test.strictEqual parse(str, '%u'), '7', '%u'
+        test.strictEqual parse(str, '%v'), ' 8-APR-2012', '%v'
+        test.strictEqual parse(str, '%V'), '14', '%V'
+        test.strictEqual parse(str, '%W'), '14', '%W'
+        test.strictEqual parse(str, '%w'), '0', '%w'
+        test.strictEqual parse(str, '%X'), '09:04:03', '%X'
+        test.strictEqual parse(str, '%x'), '04/08/12', '%x'
+        test.strictEqual parse(str, '%Y'), '2012', '%Y'
+        test.strictEqual parse(str, '%y'), '12', '%y'
+        test.strictEqual parse(str, '%Z'), 'JST', '%Z'
+        test.strictEqual parse(str, '%z'), '+0900', '%z'
+        test.strictEqual parse(str, '%%'), '%', '%%'
+        test.done()
+
   leap: (test)->
     test.ok leap 1996
     test.ok not leap 1997
