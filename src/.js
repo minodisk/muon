@@ -42,7 +42,6 @@ this.mix = function () {
   var i
     , l
     , arg
-    , prop
     , child = {};
   for (i = 0, l = arguments.length; i < l; i++) {
     arg = arguments[i];
