@@ -8,21 +8,20 @@ require 'json'
 
 
 PACKAGE_NAME = 'muon'
+VERSION = '0.1.0'
 INPUT = 'src'
 OUTPUT = 'lib'
 TEST = 'test'
-def generateCopyright(version)
-<<-EOS
+COPYRIGHT = <<-EOS
 /**
  * @fileOverview
  * @name muon.js
  * @author Daisuke Mino daisuke.mino@gmail.com
  * @url https://github.com/minodisk/muon
- * @version #{version}
+ * @version #{VERSION}
  * @license MIT License
  */
 EOS
-end
 PREFIX = <<-EOS
 ;(function () {
   'use strict';
@@ -39,15 +38,13 @@ POSTFIX = <<-EOS
 EOS
 
 
-version = nil
 filename = nil
 
 task :default => [:compile, :minimize, :test]
 
 task :compile do
-  version = getVersion()
   files = search()
-  code = compile(files, version)
+  code = compile(files)
   filename = "#{OUTPUT}/#{PACKAGE_NAME}.js"
   write filename, code
 end
@@ -94,7 +91,7 @@ def search
   files
 end
 
-def compile(files, version)
+def compile(files)
   declarations = ["#{PACKAGE_NAME} = {}"]
   packagesList = []
   files.each do |file|
@@ -166,28 +163,28 @@ EOS
 EOS
   end
 
-  generateCopyright(version) + PREFIX + declaration + implement + POSTFIX
+  COPYRIGHT + PREFIX + declaration + implement + POSTFIX
 end
 
-def getVersion
-  begin
-    IO.popen('git tag') do |io|
-      tags = []
-      while (tag = io.gets)
-        tags.push(tag)
-      end
-      if tags.empty?
-        nil
-      else
-        tag = tags.pop()
-        versions = tag.scan(/([\d\.]+)/).flatten()
-        versions.shift()
-      end
-    end
-  rescue
-    nil
-  end
-end
+#def getVersion
+#  begin
+#    IO.popen('git tag') do |io|
+#      tags = []
+#      while (tag = io.gets)
+#        tags.push(tag)
+#      end
+#      if tags.empty?
+#        nil
+#      else
+#        tag = tags.pop()
+#        versions = tag.scan(/([\d\.]+)/).flatten()
+#        versions.shift()
+#      end
+#    end
+#  rescue
+#    nil
+#  end
+#end
 
 def minimize(filename)
   begin
