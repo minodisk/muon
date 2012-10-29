@@ -1,32 +1,33 @@
 /*
-muon.js
-https://raw.github.com/minodisk/muon/master/MIT-LICENSE
---
-ColorMatrix Class v2.1
-released under MIT License (X11)
-http://www.opensource.org/licenses/mit-license.php
-Author: Mario Klingemann
-http:#www.quasimondo.com
-*/
-(function() {
-  var ArrayUtil, BilateralFilter, Blend, BlurFilter, CSSUtil, CanvasUtil, ColorMatrix, ColorMatrixFilter, DOM, DateUtil, DeficiencyType, DoubleFilter, Easing, Event, EventDispatcher, EventPhase, EventUtil, Filter, GaussianFilter, HTTP, History, JSON, KernelFilter, LaplacianFilter, MathUtil, Matrix, MedianFilter, ObjectUtil, Point, PrewittFilter, QueryString, Rectangle, SobelFilter, StringUtil, Ticker, Transition, Tween, URL, UnsharpMaskFilter, exports, requestAnimationFrame, window, _IDENTITY, _LUMA_B, _LUMA_B2, _LUMA_G, _LUMA_G2, _LUMA_R, _LUMA_R2, _ONETHIRD, _RAD, _cos, _max, _min, _mix, _peg, _sin, _tan, __slice = [].slice, __indexOf = [].indexOf || function(item) {
+ muon.js
+ https://raw.github.com/minodisk/muon/master/MIT-LICENSE
+ --
+ ColorMatrix Class v2.1
+ released under MIT License (X11)
+ http://www.opensource.org/licenses/mit-license.php
+ Author: Mario Klingemann
+ http:#www.quasimondo.com
+ */
+(function () {
+  var ArrayUtil, BilateralFilter, Blend, BlurFilter, CSSUtil, CanvasUtil, ColorMatrix, ColorMatrixFilter, DOM, DateUtil, DeficiencyType, DoubleFilter, Easing, Event, EventDispatcher, EventPhase, EventUtil, Filter, GaussianFilter, HTTP, History, JSON, KernelFilter, LaplacianFilter, MathUtil, Matrix, MedianFilter, ObjectUtil, Point, PrewittFilter, QueryString, Rectangle, SobelFilter, StringUtil, Ticker, Transition, Tween, URL, UnsharpMaskFilter, exports, requestAnimationFrame, window, _IDENTITY, _LUMA_B, _LUMA_B2, _LUMA_G, _LUMA_G2, _LUMA_R, _LUMA_R2, _ONETHIRD, _RAD, _cos, _max, _min, _mix, _peg, _sin, _tan, __slice = [].slice, __indexOf = [].indexOf || function (item) {
     for (var i = 0, l = this.length; i < l; i++) {
       if (i in this && this[i] === item) return i;
     }
     return -1;
-  }, __hasProp = {}.hasOwnProperty, __extends = function(child, parent) {
+  }, __hasProp = {}.hasOwnProperty, __extends = function (child, parent) {
     for (var key in parent) {
       if (__hasProp.call(parent, key)) child[key] = parent[key];
     }
     function ctor() {
       this.constructor = child;
     }
+
     ctor.prototype = parent.prototype;
     child.prototype = new ctor;
     child.__super__ = parent.prototype;
     return child;
-  }, __bind = function(fn, me) {
-    return function() {
+  }, __bind = function (fn, me) {
+    return function () {
       return fn.apply(me, arguments);
     };
   };
@@ -66,55 +67,56 @@ http:#www.quasimondo.com
   }
   exports = window.muon;
   exports.css3.Easing = Easing = {
-    linear: "linear",
-    ease: "ease",
-    easeIn: "ease-in",
-    easeOut: "ease-out",
-    easeInOut: "ease-in-out",
-    easeInQuad: "cubic-bezier(0.550, 0.085, 0.680, 0.530)",
-    easeOutQuad: "cubic-bezier(0.250, 0.460, 0.450, 0.940)",
-    easeInOutQuad: "cubic-bezier(0.455, 0.030, 0.515, 0.955)",
-    easeInQuart: "cubic-bezier(0.895, 0.030, 0.685, 0.220)",
-    easeOutQuart: "cubic-bezier(0.165, 0.840, 0.440, 1.000)",
+    linear        : "linear",
+    ease          : "ease",
+    easeIn        : "ease-in",
+    easeOut       : "ease-out",
+    easeInOut     : "ease-in-out",
+    easeInQuad    : "cubic-bezier(0.550, 0.085, 0.680, 0.530)",
+    easeOutQuad   : "cubic-bezier(0.250, 0.460, 0.450, 0.940)",
+    easeInOutQuad : "cubic-bezier(0.455, 0.030, 0.515, 0.955)",
+    easeInQuart   : "cubic-bezier(0.895, 0.030, 0.685, 0.220)",
+    easeOutQuart  : "cubic-bezier(0.165, 0.840, 0.440, 1.000)",
     easeInOutQuart: "cubic-bezier(0.770, 0.000, 0.175, 1.000)",
-    easeInQuint: "cubic-bezier(0.755, 0.050, 0.855, 0.060)",
-    easeOutQuint: "cubic-bezier(0.230, 1.000, 0.320, 1.000)",
+    easeInQuint   : "cubic-bezier(0.755, 0.050, 0.855, 0.060)",
+    easeOutQuint  : "cubic-bezier(0.230, 1.000, 0.320, 1.000)",
     easeInOutQuint: "cubic-bezier(0.860, 0.000, 0.070, 1.000)",
-    easeInCubic: "cubic-bezier(0.550, 0.055, 0.675, 0.190)",
-    easeOutCubic: "cubic-bezier(0.215, 0.610, 0.355, 1.000)",
+    easeInCubic   : "cubic-bezier(0.550, 0.055, 0.675, 0.190)",
+    easeOutCubic  : "cubic-bezier(0.215, 0.610, 0.355, 1.000)",
     easeInOutCubic: "cubic-bezier(0.645, 0.045, 0.355, 1.000)",
-    easeInSine: "cubic-bezier(0.470, 0.000, 0.745, 0.715)",
-    easeOutSine: "cubic-bezier(0.390, 0.575, 0.565, 1.000)",
-    easeInOutSine: "cubic-bezier(0.445, 0.050, 0.550, 0.950)",
-    easeInExpo: "cubic-bezier(0.950, 0.050, 0.795, 0.035)",
-    easeOutExpo: "cubic-bezier(0.190, 1.000, 0.220, 1.000)",
-    easeInOutExpo: "cubic-bezier(1.000, 0.000, 0.000, 1.000)",
-    easeInCirc: "cubic-bezier(0.600, 0.040, 0.980, 0.335)",
-    easeOutCirc: "cubic-bezier(0.075, 0.820, 0.165, 1.000)",
-    easeInOutCirc: "cubic-bezier(0.785, 0.135, 0.150, 0.860)",
-    easeInBack: "cubic-bezier(0.600, -0.280, 0.735, 0.045)",
-    easeOutBack: "cubic-bezier(0.175,  0.885, 0.320, 1.275)",
-    easeInOutBack: "cubic-bezier(0.680, -0.550, 0.265, 1.550)"
+    easeInSine    : "cubic-bezier(0.470, 0.000, 0.745, 0.715)",
+    easeOutSine   : "cubic-bezier(0.390, 0.575, 0.565, 1.000)",
+    easeInOutSine : "cubic-bezier(0.445, 0.050, 0.550, 0.950)",
+    easeInExpo    : "cubic-bezier(0.950, 0.050, 0.795, 0.035)",
+    easeOutExpo   : "cubic-bezier(0.190, 1.000, 0.220, 1.000)",
+    easeInOutExpo : "cubic-bezier(1.000, 0.000, 0.000, 1.000)",
+    easeInCirc    : "cubic-bezier(0.600, 0.040, 0.980, 0.335)",
+    easeOutCirc   : "cubic-bezier(0.075, 0.820, 0.165, 1.000)",
+    easeInOutCirc : "cubic-bezier(0.785, 0.135, 0.150, 0.860)",
+    easeInBack    : "cubic-bezier(0.600, -0.280, 0.735, 0.045)",
+    easeOutBack   : "cubic-bezier(0.175,  0.885, 0.320, 1.275)",
+    easeInOutBack : "cubic-bezier(0.680, -0.550, 0.265, 1.550)"
   };
-  exports.css3.Transition = Transition = function() {
+  exports.css3.Transition = Transition = function () {
     function Transition() {
       this._storage = {};
     }
-    Transition.prototype.add = function(name, time, easing) {
+
+    Transition.prototype.add = function (name, time, easing) {
       if (/^webkit|moz|ms/i.test(name)) {
-        name = name.replace(/([A-Za-z]+?[a-z]*)/g, function(text) {
+        name = name.replace(/([A-Za-z]+?[a-z]*)/g, function (text) {
           return "-" + text.toLowerCase();
         });
       }
       return this._storage[name] = {
-        time: time,
+        time  : time,
         easing: easing
       };
     };
-    Transition.prototype.remove = function(name) {
+    Transition.prototype.remove = function (name) {
       return delete this._storage[name];
     };
-    Transition.prototype.toString = function() {
+    Transition.prototype.toString = function () {
       var name, tmp, value, _ref;
       tmp = [];
       _ref = this._storage;
@@ -127,14 +129,14 @@ http:#www.quasimondo.com
     return Transition;
   }();
   exports.css3.Tween = Tween = {
-    _transitions: {},
+    _transitions   : {},
     _computedStyles: {},
-    to: function(elem, props, time, easing, callback) {
+    to             : function (elem, props, time, easing, callback) {
       var _this = this;
       if (easing == null) {
         easing = Easing.ease;
       }
-      return setTimeout(function() {
+      return setTimeout(function () {
         var computedStyle, len, listener, name, propList, transition, value, _results;
         propList = {};
         len = 0;
@@ -151,12 +153,12 @@ http:#www.quasimondo.com
           }
         }
         if (len === 0) {
-          setTimeout(function() {
+          setTimeout(function () {
             return typeof callback === "function" ? callback() : void 0;
           }, 0);
         }
         if (len !== 0) {
-          listener = function(e) {
+          listener = function (e) {
             elem = e.target;
             transition = _this._transitions[elem];
             transition.remove(e.propertyName);
@@ -177,7 +179,7 @@ http:#www.quasimondo.com
     }
   };
   exports.dom.DOM = DOM = {
-    create: function(nodeName, attrs, text) {
+    create          : function (nodeName, attrs, text) {
       var elem, key, value;
       elem = document.createElement(nodeName);
       for (key in attrs) {
@@ -192,10 +194,10 @@ http:#www.quasimondo.com
       }
       return elem;
     },
-    getComputedStyle: function(elem) {
+    getComputedStyle: function (elem) {
       return elem.currentStyle || document.defaultView.getComputedStyle(elem, "");
     },
-    setText: function(elem, text) {
+    setText         : function (elem, text) {
       if (typeof elem === "string") {
         elem = document.createElement(elem);
       }
@@ -204,7 +206,7 @@ http:#www.quasimondo.com
       }
       return elem;
     },
-    getFormData: function(form) {
+    getFormData     : function (form) {
       var data, elem, value, _i, _len, _ref;
       data = {};
       _ref = form.elements;
@@ -223,7 +225,7 @@ http:#www.quasimondo.com
       }
       return data;
     },
-    clearForm: function(form) {
+    clearForm       : function (form) {
       var elem, first, nodeName, type, _i, _len, _ref, _results;
       first = true;
       _ref = form.elements;
@@ -244,19 +246,19 @@ http:#www.quasimondo.com
       }
       return _results;
     },
-    prependChild: function(elem, parent) {
+    prependChild    : function (elem, parent) {
       return parent.insertBefore(elem, parent.firstChild);
     },
-    insertBefore: function(elem, before) {
+    insertBefore    : function (elem, before) {
       before.parentNode.insertBefore(elem, before.nextSibling);
       return elem;
     },
-    remove: function(elem) {
+    remove          : function (elem) {
       var _ref;
       return elem != null ? (_ref = elem.parentNode) != null ? _ref.removeChild(elem) : void 0 : void 0;
     },
-    replaceWithInput: function(elem) {
-      return elem.addEventListener("click", function(e) {
+    replaceWithInput: function (elem) {
+      return elem.addEventListener("click", function (e) {
         var input, text;
         elem = e.target;
         elem.style.display = "none";
@@ -267,19 +269,19 @@ http:#www.quasimondo.com
         input.className = "copy";
         input.value = text;
         DOM.insertBefore(input, elem);
-        return function(input, elem) {
-          setTimeout(function() {
+        return function (input, elem) {
+          setTimeout(function () {
             input.focus();
             return input.select();
           }, 0);
-          return input.addEventListener("focusout", function(e) {
+          return input.addEventListener("focusout", function (e) {
             DOM.remove(input);
             return elem.style.display = "inline";
           });
         }(input, elem);
       });
     },
-    getRect: function(elem) {
+    getRect         : function (elem) {
       var el, ox, oy, sx, sy;
       ox = 0;
       oy = 0;
@@ -298,24 +300,24 @@ http:#www.quasimondo.com
         el = el.parentNode;
       }
       return {
-        x: ox - sx,
-        y: oy - sy,
-        width: elem.offsetWidth,
+        x     : ox - sx,
+        y     : oy - sy,
+        width : elem.offsetWidth,
         height: elem.offsetHeight
       };
     },
-    listen: function() {
+    listen          : function () {
       if (typeof window.addEventListener === "function") {
-        return function(elem, type, listener) {
+        return function (elem, type, listener) {
           return elem.addEventListener(type, listener, false);
         };
       } else {
-        return function(elem, type, listener) {
-          return elem.attachEvent("on" + type, function(e) {
-            e.stopPropagation = function() {
+        return function (elem, type, listener) {
+          return elem.attachEvent("on" + type, function (e) {
+            e.stopPropagation = function () {
               return this.cancelBubble = true;
             };
-            e.preventDefault = function() {
+            e.preventDefault = function () {
               return this.returnValue = false;
             };
             return listener(e);
@@ -324,7 +326,7 @@ http:#www.quasimondo.com
       }
     }()
   };
-  exports.events.Event = Event = function() {
+  exports.events.Event = Event = function () {
     Event.COMPLETE = "complete";
     function Event(type, bubbles, cancelable) {
       var event;
@@ -352,31 +354,33 @@ http:#www.quasimondo.com
       this._isPropagationStoppedImmediately = false;
       this._isDefaultPrevented = false;
     }
-    Event.prototype.formatToString = function() {
+
+    Event.prototype.formatToString = function () {
       var args, className;
       className = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       return "";
     };
-    Event.prototype.stopPropagation = function() {
+    Event.prototype.stopPropagation = function () {
       this._isPropagationStopped = true;
     };
-    Event.prototype.stopImmediatePropagation = function() {
+    Event.prototype.stopImmediatePropagation = function () {
       this._isPropagationStopped = true;
       this._isPropagationStoppedImmediately = true;
     };
-    Event.prototype.isDefaultPrevented = function() {
+    Event.prototype.isDefaultPrevented = function () {
       return this._isDefaultPrevented;
     };
-    Event.prototype.preventDefault = function() {
+    Event.prototype.preventDefault = function () {
       this._isDefaultPrevented = true;
     };
     return Event;
   }();
-  exports.events.EventDispatcher = EventDispatcher = function() {
+  exports.events.EventDispatcher = EventDispatcher = function () {
     function EventDispatcher() {
       this._events = {};
     }
-    EventDispatcher.prototype.addEventListener = function(type, listener, useCapture, priority) {
+
+    EventDispatcher.prototype.addEventListener = function (type, listener, useCapture, priority) {
       if (useCapture == null) {
         useCapture = false;
       }
@@ -393,18 +397,18 @@ http:#www.quasimondo.com
         this._events[type] = [];
       }
       this._events[type].push({
-        listener: listener,
+        listener  : listener,
         useCapture: useCapture,
-        priority: priority
+        priority  : priority
       });
       this._events[type].sort(this._sortOnPriorityInDescendingOrder);
       return this;
     };
     EventDispatcher.prototype.on = EventDispatcher.prototype.addEventListener;
-    EventDispatcher.prototype._sortOnPriorityInDescendingOrder = function(a, b) {
+    EventDispatcher.prototype._sortOnPriorityInDescendingOrder = function (a, b) {
       return b.priority - a.priority;
     };
-    EventDispatcher.prototype.removeEventListener = function(type, listener) {
+    EventDispatcher.prototype.removeEventListener = function (type, listener) {
       var i, storage;
       if (storage = this._events[type]) {
         i = storage.length;
@@ -420,7 +424,7 @@ http:#www.quasimondo.com
       return this;
     };
     EventDispatcher.prototype.off = EventDispatcher.prototype.removeEventListener;
-    EventDispatcher.prototype.dispatchEvent = function(event) {
+    EventDispatcher.prototype.dispatchEvent = function (event) {
       var obj, objs, _i, _len;
       if (!(event instanceof Event)) {
         throw new TypeError("EventDispatcher#dispatchEvent: event isn't Event");
@@ -430,8 +434,8 @@ http:#www.quasimondo.com
         for (_i = 0, _len = objs.length; _i < _len; _i++) {
           obj = objs[_i];
           if (obj.useCapture && event.eventPhase === EventPhase.CAPTURING_PHASE || obj.useCapture === false && event.eventPhase !== EventPhase.CAPTURING_PHASE) {
-            (function(obj, event) {
-              return setTimeout(function() {
+            (function (obj, event) {
+              return setTimeout(function () {
                 return obj.listener(event);
               }, 0);
             })(obj, event);
@@ -448,13 +452,13 @@ http:#www.quasimondo.com
   }();
   exports.events.EventPhase = EventPhase = {
     CAPTURING_PHASE: 1,
-    AT_TARGET: 2,
-    BUBBLING_PHASE: 3
+    AT_TARGET      : 2,
+    BUBBLING_PHASE : 3
   };
-  _mix = function(a, b, f) {
+  _mix = function (a, b, f) {
     return a + ((b - a) * f >> 8);
   };
-  _peg = function(n) {
+  _peg = function (n) {
     if (n < 0) {
       return 0;
     } else if (n > 255) {
@@ -466,7 +470,7 @@ http:#www.quasimondo.com
   _min = Math.min;
   _max = Math.max;
   exports.filters.Blend = Blend = {
-    scan: function(dst, src, method) {
+    scan       : function (dst, src, method) {
       var d, i, o, s, _i, _ref, _ref1;
       d = dst.data;
       s = src.data;
@@ -476,55 +480,55 @@ http:#www.quasimondo.com
       }
       return dst;
     },
-    blend: function(dr, dg, db, da, sr, sg, sb, sa) {
+    blend      : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ _mix(dr, sr, sa), _mix(dg, sg, sa), _mix(db, sb, sa), da + sa ];
     },
-    add: function(dr, dg, db, da, sr, sg, sb, sa) {
+    add        : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ dr + (sr * sa >> 8), dg + (sg * sa >> 8), db + (sb * sa >> 8), da + sa ];
     },
-    subtract: function(dr, dg, db, da, sr, sg, sb, sa) {
+    subtract   : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ dr - (sr * sa >> 8), dg - (sg * sa >> 8), db - (sb * sa >> 8), da + sa ];
     },
-    darkest: function(dr, dg, db, da, sr, sg, sb, sa) {
+    darkest    : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ _mix(dr, _min(dr, sr * sa >> 8), sa), _mix(dg, _min(dg, sg * sa >> 8), sa), _mix(db, _min(db, sb * sa >> 8), sa), da + sa ];
     },
-    lightest: function(dr, dg, db, da, sr, sg, sb, sa) {
+    lightest   : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ _max(dr, sr * sa >> 8), _max(dg, sg * sa >> 8), _max(db, sb * sa >> 8), da + sa ];
     },
-    difference: function(dr, dg, db, da, sr, sg, sb, sa) {
+    difference : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ _mix(dr, dr > sr ? dr - sr : sr - dr, sa), _mix(dg, dg > sg ? dg - sg : sg - dg, sa), _mix(db, db > sb ? db - sb : sb - db, sa), da + sa ];
     },
-    exclusion: function(dr, dg, db, da, sr, sg, sb, sa) {
+    exclusion  : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ _mix(dr, dr + sr - (dr * sr >> 7), sa), _mix(dg, dg + sg - (dg * sg >> 7), sa), _mix(db, db + sb - (db * sb >> 7), sa), da + sa ];
     },
-    reflex: function(dr, dg, db, da, sr, sg, sb, sa) {
+    reflex     : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ _mix(dr, sr === 255 ? sr : dr * dr / (255 - sr), sa), _mix(dg, sg === 255 ? sg : dg * dg / (255 - sg), sa), _mix(db, sb === 255 ? sb : db * db / (255 - sb), sa), da + sa ];
     },
-    multiply: function(dr, dg, db, da, sr, sg, sb, sa) {
+    multiply   : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ _mix(dr, dr * sr >> 8, sa), _mix(dg, dg * sg >> 8, sa), _mix(db, db * sb >> 8, sa), da + sa ];
     },
-    screen: function(dr, dg, db, da, sr, sg, sb, sa) {
+    screen     : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ _mix(dr, 255 - ((255 - dr) * (255 - sr) >> 8), sa), _mix(dg, 255 - ((255 - dg) * (255 - sg) >> 8), sa), _mix(db, 255 - ((255 - db) * (255 - sb) >> 8), sa), da + sa ];
     },
-    overlay: function(dr, dg, db, da, sr, sg, sb, sa) {
+    overlay    : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ _mix(dr, dr < 128 ? dr * sr >> 7 : 255 - ((255 - dr) * (255 - sr) >> 7), sa), _mix(dg, dg < 128 ? dg * sg >> 7 : 255 - ((255 - dg) * (255 - sg) >> 7), sa), _mix(db, db < 128 ? db * sb >> 7 : 255 - ((255 - db) * (255 - sb) >> 7), sa), da + sa ];
     },
-    softLight: function(dr, dg, db, da, sr, sg, sb, sa) {
+    softLight  : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ _mix(dr, (dr * sr >> 7) + (dr * dr >> 8) - (dr * dr * sr >> 15), sa), _mix(dg, (dg * sg >> 7) + (dg * dg >> 8) - (dg * dg * sg >> 15), sa), _mix(db, (db * sb >> 7) + (db * db >> 8) - (db * db * sb >> 15), sa), da + sa ];
     },
-    hardLight: function(dr, dg, db, da, sr, sg, sb, sa) {
+    hardLight  : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ _mix(dr, sr < 128 ? dr * sr >> 7 : 255 - ((255 - dr) * (255 - sr) >> 7), sa), _mix(dg, sg < 128 ? dg * sg >> 7 : 255 - ((255 - dg) * (255 - sg) >> 7), sa), _mix(db, sb < 128 ? db * sb >> 7 : 255 - ((255 - db) * (255 - sb) >> 7), sa), da + sa ];
     },
-    vividLight: function(dr, dg, db, da, sr, sg, sb, sa) {
+    vividLight : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ sr === 0 ? 0 : sr === 255 ? 255 : sr < 128 ? 255 - _peg((255 - dr << 8) / (sr * 2)) : _peg((dr << 8) / ((255 - sr) * 2)), sg === 0 ? 0 : sg === 255 ? 255 : sg < 128 ? 255 - _peg((255 - dg << 8) / (sg * 2)) : _peg((dg << 8) / ((255 - sg) * 2)), sb === 0 ? 0 : sb === 255 ? 255 : sb < 128 ? 255 - _peg((255 - db << 8) / (sb * 2)) : _peg((db << 8) / ((255 - sb) * 2)), da + sa ];
     },
-    linearLight: function(dr, dg, db, da, sr, sg, sb, sa) {
+    linearLight: function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ sr < 128 ? _max(sr * 2 + dr - 255, 0) : _min(sr + dr, 255), sg < 128 ? _max(sg * 2 + dg - 255, 0) : _min(sg + dg, 255), sb < 128 ? _max(sb * 2 + db - 255, 0) : _min(sb + db, 255), da + sa ];
     },
-    pinLight: function(dr, dg, db, da, sr, sg, sb, sa) {
+    pinLight   : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ sr < 128 ? _min(sr * 2, dr) : _max((sr - 128) * 2, dr), sg < 128 ? _min(sg * 2, dg) : _max((sg - 128) * 2, dg), sb < 128 ? _min(sb * 2, db) : _max((sb - 128) * 2, db), da + sa ];
     },
-    hardMix: function(dr, dg, db, da, sr, sg, sb, sa) {
+    hardMix    : function (dr, dg, db, da, sr, sg, sb, sa) {
       var b, g, r;
       r = sr === 0 ? 0 : sr === 255 ? 255 : sr < 128 ? 255 - _peg((255 - dr << 8) / (sr * 2)) : _peg((dr << 8) / ((255 - sr) * 2));
       g = sg === 0 ? 0 : sg === 255 ? 255 : sg < 128 ? 255 - _peg((255 - dg << 8) / (sg * 2)) : _peg((dg << 8) / ((255 - sg) * 2));
@@ -534,24 +538,25 @@ http:#www.quasimondo.com
       b = b < 128 ? 0 : 255;
       return [ dr * (255 - sa) / 255 + r * sa / 255, dg * (255 - sa) / 255 + g * sa / 255, db * (255 - sa) / 255 + b * sa / 255, da + sa ];
     },
-    dodge: function(dr, dg, db, da, sr, sg, sb, sa) {
+    dodge      : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ _mix(dr, _peg((dr << 8) / (255 - sr)), sa), _mix(dg, _peg((dg << 8) / (255 - sg)), sa), _mix(db, _peg((db << 8) / (255 - sb)), sa), da + sa ];
     },
-    burn: function(dr, dg, db, da, sr, sg, sb, sa) {
+    burn       : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ _mix(dr, sr === 0 ? 0 : 255 - _peg((255 - dr << 8) / sr), sa), _mix(dg, sg === 0 ? 0 : 255 - _peg((255 - dg << 8) / sg), sa), _mix(db, sb === 0 ? 0 : 255 - _peg((255 - db << 8) / sb), sa), da + sa ];
     },
-    linearDodge: function(dr, dg, db, da, sr, sg, sb, sa) {
+    linearDodge: function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ _mix(dr, _min(sr + dr, 255), sa), _mix(dg, _min(dg + sg, 255), sa), _mix(db, _min(db + sb, 255), sa), da + sa ];
     },
-    linearBurn: function(dr, dg, db, da, sr, sg, sb, sa) {
+    linearBurn : function (dr, dg, db, da, sr, sg, sb, sa) {
       return [ _mix(dr, _max(sr + dr - 255, 0), sa), _mix(dg, _max(dg + sg - 255, 0), sa), _mix(db, _max(db + sb - 255, 0), sa), da + sa ];
     }
   };
-  exports.filters.ColorMatrixFilter = ColorMatrixFilter = function() {
+  exports.filters.ColorMatrixFilter = ColorMatrixFilter = function () {
     function ColorMatrixFilter(matrix) {
       this.matrix = matrix;
     }
-    ColorMatrixFilter.prototype.scan = function(src, dst) {
+
+    ColorMatrixFilter.prototype.scan = function (src, dst) {
       var a, b, d, g, i, m, r, s, _i, _ref;
       m = this.matrix;
       s = src.data;
@@ -571,18 +576,20 @@ http:#www.quasimondo.com
     return ColorMatrixFilter;
   }();
   exports.filters.DeficiencyType = DeficiencyType = {
-    PROTANOPIA: "protanopia",
-    PROTANOMALY: "protanomaly",
-    DEUTERANOPIA: "deuteranopia",
-    DEUTERNOMALY: "deuteranomaly",
-    TRITANOPIA: "tritanopia",
-    TRITANOMALY: "tritanomaly",
-    ACHROMATOSIA: "achromatopsia",
+    PROTANOPIA   : "protanopia",
+    PROTANOMALY  : "protanomaly",
+    DEUTERANOPIA : "deuteranopia",
+    DEUTERNOMALY : "deuteranomaly",
+    TRITANOPIA   : "tritanopia",
+    TRITANOMALY  : "tritanomaly",
+    ACHROMATOSIA : "achromatopsia",
     ACHROMATOMALY: "achromatomaly"
   };
-  exports.filters.Filter = Filter = function() {
-    function Filter() {}
-    Filter.prototype.scan = function(graphics) {
+  exports.filters.Filter = Filter = function () {
+    function Filter() {
+    }
+
+    Filter.prototype.scan = function (graphics) {
       var out, pixels, src;
       src = graphics.getImageData();
       pixels = this._getPixels(src);
@@ -590,7 +597,7 @@ http:#www.quasimondo.com
       this._setPixels(out, pixels);
       return out;
     };
-    Filter.prototype._getPixels = function(imageData) {
+    Filter.prototype._getPixels = function (imageData) {
       var data, height, i, pixels, width, x, y, _i, _j;
       data = imageData.data;
       width = imageData.width;
@@ -606,7 +613,7 @@ http:#www.quasimondo.com
       }
       return pixels;
     };
-    Filter.prototype._setPixels = function(imageData, pixels) {
+    Filter.prototype._setPixels = function (imageData, pixels) {
       var data, height, i, p, width, x, y, _i, _j;
       data = imageData.data;
       width = imageData.width;
@@ -623,7 +630,7 @@ http:#www.quasimondo.com
         }
       }
     };
-    Filter.prototype._evaluatePixel = function(pixels, x, y, width, height) {
+    Filter.prototype._evaluatePixel = function (pixels, x, y, width, height) {
       return pixels[y][x];
     };
     return Filter;
@@ -637,7 +644,7 @@ http:#www.quasimondo.com
   _ONETHIRD = 1 / 3;
   _IDENTITY = [ 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0 ];
   _RAD = Math.PI / 180;
-  exports.geom.ColorMatrix = ColorMatrix = function() {
+  exports.geom.ColorMatrix = ColorMatrix = function () {
     function ColorMatrix(matrix) {
       if (matrix instanceof ColorMatrix) {
         this.matrix = matrix.matrix.concat();
@@ -647,7 +654,8 @@ http:#www.quasimondo.com
         this.reset();
       }
     }
-    ColorMatrix.prototype.toString = function() {
+
+    ColorMatrix.prototype.toString = function () {
       var i, l, t, tmp, v, x, y, _i, _j, _k, _l, _len, _m, _ref, _ref1, _ref2, _ref3;
       tmp = [];
       _ref = this.matrix;
@@ -678,13 +686,13 @@ http:#www.quasimondo.com
       }
       return tmp.join("\n");
     };
-    ColorMatrix.prototype.clone = function() {
+    ColorMatrix.prototype.clone = function () {
       return new ColorMatrix(this.matrix);
     };
-    ColorMatrix.prototype.reset = function() {
+    ColorMatrix.prototype.reset = function () {
       return this.matrix = _IDENTITY.concat();
     };
-    ColorMatrix.prototype.concat = function(src) {
+    ColorMatrix.prototype.concat = function (src) {
       var dst, i, out, x, y, _i, _j;
       dst = this.matrix;
       out = [];
@@ -698,10 +706,10 @@ http:#www.quasimondo.com
       this.matrix = out;
       return this;
     };
-    ColorMatrix.prototype.invert = function() {
+    ColorMatrix.prototype.invert = function () {
       return this.concat([ -1, 0, 0, 0, 255, 0, -1, 0, 0, 255, 0, 0, -1, 0, 255, 0, 0, 0, 1, 0 ]);
     };
-    ColorMatrix.prototype.adjustSaturation = function(s) {
+    ColorMatrix.prototype.adjustSaturation = function (s) {
       var iblum, iglum, irlum;
       irlum = -s * _LUMA_R;
       iglum = -s * _LUMA_G;
@@ -709,7 +717,7 @@ http:#www.quasimondo.com
       ++s;
       return this.concat([ irlum + s, iglum, iblum, 0, 0, irlum, iglum + s, iblum, 0, 0, irlum, iglum, iblum + s, 0, 0, 0, 0, 0, 1, 0 ]);
     };
-    ColorMatrix.prototype.adjustContrast = function(r, g, b) {
+    ColorMatrix.prototype.adjustContrast = function (r, g, b) {
       if (g == null) {
         g = r;
       }
@@ -718,7 +726,7 @@ http:#www.quasimondo.com
       }
       return this.concat([ 1 + r, 0, 0, 0, -128 * r, 0, 1 + g, 0, 0, -128 * g, 0, 0, 1 + b, 0, -128 * b, 0, 0, 0, 1, 0 ]);
     };
-    ColorMatrix.prototype.adjustBrightness = function(r, g, b) {
+    ColorMatrix.prototype.adjustBrightness = function (r, g, b) {
       if (g == null) {
         g = r;
       }
@@ -727,7 +735,7 @@ http:#www.quasimondo.com
       }
       return this.concat([ 1, 0, 0, 0, 255 * r, 0, 1, 0, 0, 255 * g, 0, 0, 1, 0, 255 * b, 0, 0, 0, 1, 0 ]);
     };
-    ColorMatrix.prototype.adjustHue = function(degree) {
+    ColorMatrix.prototype.adjustHue = function (degree) {
       var B, G, R, c, l, m, n, s;
       R = _LUMA_R;
       G = _LUMA_G;
@@ -740,19 +748,19 @@ http:#www.quasimondo.com
       n = l + s;
       return this.concat([ R * m + c, G * m, B * m + s, 0, 0, R * l + s * .143, G * l + c + s * .14, B * l + s * -.283, 0, 0, R * n - s, G * n, B * n + c, 0, 0, 0, 0, 0, 1, 0 ]);
     };
-    ColorMatrix.prototype.rotateHue = function(degree) {
+    ColorMatrix.prototype.rotateHue = function (degree) {
       this._initHue();
       this.concat(this._preHue.matrix);
       this.rotateBlue(degree);
       return this.concat(this._postHue.matrix);
     };
-    ColorMatrix.prototype.luminance2Alpha = function() {
+    ColorMatrix.prototype.luminance2Alpha = function () {
       return this.concat([ 0, 0, 0, 0, 255, 0, 0, 0, 0, 255, 0, 0, 0, 0, 255, _LUMA_R, _LUMA_G, _LUMA_B, 0, 0 ]);
     };
-    ColorMatrix.prototype.adjustAlphaContrast = function(amount) {
+    ColorMatrix.prototype.adjustAlphaContrast = function (amount) {
       return this.concat([ 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, amount + 1, -128 * amount ]);
     };
-    ColorMatrix.prototype.colorize = function(rgb, amount) {
+    ColorMatrix.prototype.colorize = function (rgb, amount) {
       var B, G, R, b, g, invAmount, r;
       if (amount == null) {
         amount = 1;
@@ -766,7 +774,7 @@ http:#www.quasimondo.com
       invAmount = 1 - amount;
       return this.concat([ invAmount + amount * r * R, amount * r * G, amount * r * B, 0, 0, amount * g * R, invAmount + amount * g * G, amount * g * B, 0, 0, amount * b * R, amount * b * G, invAmount + amount * b * B, 0, 0, 0, 0, 0, 1, 0 ]);
     };
-    ColorMatrix.prototype.setChannels = function(r, g, b, a) {
+    ColorMatrix.prototype.setChannels = function (r, g, b, a) {
       var af, bf, gf, rf;
       if (r == null) {
         r = 1;
@@ -798,7 +806,7 @@ http:#www.quasimondo.com
       }
       return this.concat([ (r & 1) === 1 ? rf : 0, (r & 2) === 2 ? rf : 0, (r & 4) === 4 ? rf : 0, (r & 8) === 8 ? rf : 0, 0, (g & 1) === 1 ? gf : 0, (g & 2) === 2 ? gf : 0, (g & 4) === 4 ? gf : 0, (g & 8) === 8 ? gf : 0, 0, (b & 1) === 1 ? bf : 0, (b & 2) === 2 ? bf : 0, (b & 4) === 4 ? bf : 0, (b & 8) === 8 ? bf : 0, 0, (a & 1) === 1 ? af : 0, (a & 2) === 2 ? af : 0, (a & 4) === 4 ? af : 0, (a & 8) === 8 ? af : 0, 0 ]);
     };
-    ColorMatrix.prototype.blend = function(matrix, amount) {
+    ColorMatrix.prototype.blend = function (matrix, amount) {
       var i, v, _i, _len, _ref;
       _ref = matrix.matrix;
       for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
@@ -807,7 +815,7 @@ http:#www.quasimondo.com
       }
       return this;
     };
-    ColorMatrix.prototype.average = function(r, g, b) {
+    ColorMatrix.prototype.average = function (r, g, b) {
       if (r == null) {
         r = _ONETHIRD;
       }
@@ -819,7 +827,7 @@ http:#www.quasimondo.com
       }
       return this.concat([ r, g, b, 0, 0, r, g, b, 0, 0, r, g, b, 0, 0, 0, 0, 0, 1, 0 ]);
     };
-    ColorMatrix.prototype.threshold = function(threshold, factor) {
+    ColorMatrix.prototype.threshold = function (threshold, factor) {
       var B, G, R, t;
       if (factor == null) {
         factor = 256;
@@ -830,14 +838,14 @@ http:#www.quasimondo.com
       t = -factor * threshold;
       return this.concat([ R, G, B, 0, t, R, G, B, 0, t, R, G, B, 0, t, 0, 0, 0, 1, 0 ]);
     };
-    ColorMatrix.prototype.desaturate = function() {
+    ColorMatrix.prototype.desaturate = function () {
       var B, G, R;
       R = _LUMA_R;
       G = _LUMA_G;
       B = _LUMA_B;
       return this.concat([ R, G, B, 0, 0, R, G, B, 0, 0, R, G, B, 0, 0, 0, 0, 0, 1, 0 ]);
     };
-    ColorMatrix.prototype.randomize = function(amount) {
+    ColorMatrix.prototype.randomize = function (amount) {
       var b1, b2, b3, g1, g2, g3, inv_amount, o1, o2, o3, r1, r2, r3;
       if (amount == null) {
         amount = 1;
@@ -857,7 +865,7 @@ http:#www.quasimondo.com
       o3 = amount * 255 * (Math.random() - Math.random());
       return this.concat([ r1, g1, b1, 0, o1, r2, g2, b2, 0, o2, r3, g3, b3, 0, o3, 0, 0, 0, 1, 0 ]);
     };
-    ColorMatrix.prototype.setMultiplicators = function(r, g, b, a) {
+    ColorMatrix.prototype.setMultiplicators = function (r, g, b, a) {
       if (r == null) {
         r = 1;
       }
@@ -872,7 +880,7 @@ http:#www.quasimondo.com
       }
       return this.concat([ r, 0, 0, 0, 0, 0, g, 0, 0, 0, 0, 0, b, 0, 0, 0, 0, 0, a, 0 ]);
     };
-    ColorMatrix.prototype.clearChannels = function(r, g, b, a) {
+    ColorMatrix.prototype.clearChannels = function (r, g, b, a) {
       if (r == null) {
         r = false;
       }
@@ -898,34 +906,34 @@ http:#www.quasimondo.com
         return this.matrix[15] = this.matrix[16] = this.matrix[17] = this.matrix[18] = this.matrix[19] = 0;
       }
     };
-    ColorMatrix.prototype.thresholdAlpha = function(threshold, factor) {
+    ColorMatrix.prototype.thresholdAlpha = function (threshold, factor) {
       if (factor == null) {
         factor = 256;
       }
       return this.concat([ 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, factor, -factor * threshold ]);
     };
-    ColorMatrix.prototype.averageRGB2Alpha = function() {
+    ColorMatrix.prototype.averageRGB2Alpha = function () {
       return this.concat([ 0, 0, 0, 0, 255, 0, 0, 0, 0, 255, 0, 0, 0, 0, 255, _ONETHIRD, _ONETHIRD, _ONETHIRD, 0, 0 ]);
     };
-    ColorMatrix.prototype.invertAlpha = function() {
+    ColorMatrix.prototype.invertAlpha = function () {
       return this.concat([ 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1, 255 ]);
     };
-    ColorMatrix.prototype.rgb2Alpha = function(r, g, b) {
+    ColorMatrix.prototype.rgb2Alpha = function (r, g, b) {
       return this.concat([ 0, 0, 0, 0, 255, 0, 0, 0, 0, 255, 0, 0, 0, 0, 255, r, g, b, 0, 0 ]);
     };
-    ColorMatrix.prototype.setAlpha = function(alpha) {
+    ColorMatrix.prototype.setAlpha = function (alpha) {
       return this.concat([ 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, alpha, 0 ]);
     };
-    ColorMatrix.prototype.rotateRed = function(degree) {
+    ColorMatrix.prototype.rotateRed = function (degree) {
       return this._rotateColor(degree, 2, 1);
     };
-    ColorMatrix.prototype.rotateGreen = function(degree) {
+    ColorMatrix.prototype.rotateGreen = function (degree) {
       return this._rotateColor(degree, 0, 2);
     };
-    ColorMatrix.prototype.rotateBlue = function(degree) {
+    ColorMatrix.prototype.rotateBlue = function (degree) {
       return this._rotateColor(degree, 1, 0);
     };
-    ColorMatrix.prototype._rotateColor = function(degree, x, y) {
+    ColorMatrix.prototype._rotateColor = function (degree, x, y) {
       var mat;
       degree *= _RAD;
       mat = _IDENTITY.concat();
@@ -934,51 +942,51 @@ http:#www.quasimondo.com
       mat[x + y * 5] = -Math.sin(degree);
       return this.concat(mat);
     };
-    ColorMatrix.prototype.shearRed = function(green, blue) {
+    ColorMatrix.prototype.shearRed = function (green, blue) {
       return this._shearColor(0, 1, green, 2, blue);
     };
-    ColorMatrix.prototype.shearGreen = function(red, blue) {
+    ColorMatrix.prototype.shearGreen = function (red, blue) {
       return this._shearColor(1, 0, red, 2, blue);
     };
-    ColorMatrix.prototype.shearBlue = function(red, green) {
+    ColorMatrix.prototype.shearBlue = function (red, green) {
       return this._shearColor(2, 0, red, 1, green);
     };
-    ColorMatrix.prototype._shearColor = function(x, y1, d1, y2, d2) {
+    ColorMatrix.prototype._shearColor = function (x, y1, d1, y2, d2) {
       var mat;
       mat = _IDENTITY.concat();
       mat[y1 + x * 5] = d1;
       mat[y2 + x * 5] = d2;
       return this.concat(mat);
     };
-    ColorMatrix.prototype.applyColorDeficiency = function(type) {
+    ColorMatrix.prototype.applyColorDeficiency = function (type) {
       switch (type) {
-       case "Protanopia":
-        this.concat([ .567, .433, 0, 0, 0, .558, .442, 0, 0, 0, 0, .242, .758, 0, 0, 0, 0, 0, 1, 0 ]);
-        break;
-       case "Protanomaly":
-        this.concat([ .817, .183, 0, 0, 0, .333, .667, 0, 0, 0, 0, .125, .875, 0, 0, 0, 0, 0, 1, 0 ]);
-        break;
-       case "Deuteranopia":
-        this.concat([ .625, .375, 0, 0, 0, .7, .3, 0, 0, 0, 0, .3, .7, 0, 0, 0, 0, 0, 1, 0 ]);
-        break;
-       case "Deuteranomaly":
-        this.concat([ .8, .2, 0, 0, 0, .258, .742, 0, 0, 0, 0, .142, .858, 0, 0, 0, 0, 0, 1, 0 ]);
-        break;
-       case "Tritanopia":
-        this.concat([ .95, .05, 0, 0, 0, 0, .433, .567, 0, 0, 0, .475, .525, 0, 0, 0, 0, 0, 1, 0 ]);
-        break;
-       case "Tritanomaly":
-        this.concat([ .967, .033, 0, 0, 0, 0, .733, .267, 0, 0, 0, .183, .817, 0, 0, 0, 0, 0, 1, 0 ]);
-        break;
-       case "Achromatopsia":
-        this.concat([ .299, .587, .114, 0, 0, .299, .587, .114, 0, 0, .299, .587, .114, 0, 0, 0, 0, 0, 1, 0 ]);
-        break;
-       case "Achromatomaly":
-        this.concat([ .618, .32, .062, 0, 0, .163, .775, .062, 0, 0, .163, .32, .516, 0, 0, 0, 0, 0, 1, 0 ]);
-        break;
+        case "Protanopia":
+          this.concat([ .567, .433, 0, 0, 0, .558, .442, 0, 0, 0, 0, .242, .758, 0, 0, 0, 0, 0, 1, 0 ]);
+          break;
+        case "Protanomaly":
+          this.concat([ .817, .183, 0, 0, 0, .333, .667, 0, 0, 0, 0, .125, .875, 0, 0, 0, 0, 0, 1, 0 ]);
+          break;
+        case "Deuteranopia":
+          this.concat([ .625, .375, 0, 0, 0, .7, .3, 0, 0, 0, 0, .3, .7, 0, 0, 0, 0, 0, 1, 0 ]);
+          break;
+        case "Deuteranomaly":
+          this.concat([ .8, .2, 0, 0, 0, .258, .742, 0, 0, 0, 0, .142, .858, 0, 0, 0, 0, 0, 1, 0 ]);
+          break;
+        case "Tritanopia":
+          this.concat([ .95, .05, 0, 0, 0, 0, .433, .567, 0, 0, 0, .475, .525, 0, 0, 0, 0, 0, 1, 0 ]);
+          break;
+        case "Tritanomaly":
+          this.concat([ .967, .033, 0, 0, 0, 0, .733, .267, 0, 0, 0, .183, .817, 0, 0, 0, 0, 0, 1, 0 ]);
+          break;
+        case "Achromatopsia":
+          this.concat([ .299, .587, .114, 0, 0, .299, .587, .114, 0, 0, .299, .587, .114, 0, 0, 0, 0, 0, 1, 0 ]);
+          break;
+        case "Achromatomaly":
+          this.concat([ .618, .32, .062, 0, 0, .163, .775, .062, 0, 0, .163, .32, .516, 0, 0, 0, 0, 0, 1, 0 ]);
+          break;
       }
     };
-    ColorMatrix.prototype.applyMatrix = function(rgba) {
+    ColorMatrix.prototype.applyMatrix = function (rgba) {
       var a, a2, b, b2, g, g2, m, r, r2;
       a = rgba >>> 24 & 255;
       r = rgba >>> 16 & 255;
@@ -1015,7 +1023,7 @@ http:#www.quasimondo.com
       }
       return a2 << 24 | r2 << 16 | g2 << 8 | b2;
     };
-    ColorMatrix.prototype.transformVector = function(values) {
+    ColorMatrix.prototype.transformVector = function (values) {
       var m, oA, oB, oG, oR, sA, sB, sG, sR;
       if (values.length !== 4) {
         throw new TypeError("values length isn't 4");
@@ -1034,7 +1042,7 @@ http:#www.quasimondo.com
       values[2] = oB;
       return values[3] = oA;
     };
-    ColorMatrix.prototype._initHue = function() {
+    ColorMatrix.prototype._initHue = function () {
       var green, greenRotation, lum, red;
       greenRotation = 39.182655;
       if (!this._hueInitialized) {
@@ -1058,7 +1066,7 @@ http:#www.quasimondo.com
   _sin = Math.sin;
   _cos = Math.cos;
   _tan = Math.tan;
-  exports.geom.Matrix = Matrix = function() {
+  exports.geom.Matrix = Matrix = function () {
     function Matrix(xx, xy, yx, yy, ox, oy) {
       this.xx = xx != null ? xx : 1;
       this.xy = xy != null ? xy : 0;
@@ -1067,7 +1075,8 @@ http:#www.quasimondo.com
       this.ox = ox != null ? ox : 0;
       this.oy = oy != null ? oy : 0;
     }
-    Matrix.prototype.identity = function() {
+
+    Matrix.prototype.identity = function () {
       this.xx = 1;
       this.xy = 0;
       this.yx = 0;
@@ -1075,18 +1084,18 @@ http:#www.quasimondo.com
       this.ox = 0;
       return this.oy = 0;
     };
-    Matrix.prototype.clone = function() {
+    Matrix.prototype.clone = function () {
       return new Matrix(this.xx, this.xy, this.yx, this.yy, this.ox, this.oy);
     };
-    Matrix.prototype.toString = function() {
+    Matrix.prototype.toString = function () {
       return "" + this.xx + " " + this.yx + " " + this.ox + "\n" + this.xy + " " + this.yy + " " + this.oy + "\n0 0 1";
     };
-    Matrix.prototype.apply = function(_arg) {
+    Matrix.prototype.apply = function (_arg) {
       var ox, oy, xx, xy, yx, yy;
       xx = _arg.xx, xy = _arg.xy, yx = _arg.yx, yy = _arg.yy, ox = _arg.ox, oy = _arg.oy;
       return this._apply(xx, xy, yx, yy, ox, oy);
     };
-    Matrix.prototype._apply = function(xx, xy, yx, yy, ox, oy) {
+    Matrix.prototype._apply = function (xx, xy, yx, yy, ox, oy) {
       this.xx = xx;
       this.xy = xy;
       this.yx = yx;
@@ -1095,15 +1104,15 @@ http:#www.quasimondo.com
       this.oy = oy;
       return this;
     };
-    Matrix.prototype.setTo = function(context) {
+    Matrix.prototype.setTo = function (context) {
       return context.setTransform(this.xx, this.xy, this.yx, this.yy, this.ox, this.oy);
     };
-    Matrix.prototype.concat = function(_arg) {
+    Matrix.prototype.concat = function (_arg) {
       var ox, oy, xx, xy, yx, yy;
       xx = _arg.xx, xy = _arg.xy, yx = _arg.yx, yy = _arg.yy, ox = _arg.ox, oy = _arg.oy;
       return this._concat(xx, xy, yx, yy, ox, oy);
     };
-    Matrix.prototype._concat = function(xx, xy, yx, yy, ox, oy) {
+    Matrix.prototype._concat = function (xx, xy, yx, yy, ox, oy) {
       var _ox, _oy, _xx, _xy, _yx, _yy;
       _xx = this.xx;
       _xy = this.xy;
@@ -1119,32 +1128,32 @@ http:#www.quasimondo.com
       this.oy = xy * _ox + yy * _oy + oy;
       return this;
     };
-    Matrix.prototype.translate = function(tx, ty) {
+    Matrix.prototype.translate = function (tx, ty) {
       return this._concat(1, 0, 0, 1, tx, ty);
     };
-    Matrix.prototype.translatePoint = function(_arg) {
+    Matrix.prototype.translatePoint = function (_arg) {
       var x, y;
       x = _arg.x, y = _arg.y;
       return this.translate(x, y);
     };
-    Matrix.prototype.scale = function(sx, sy) {
+    Matrix.prototype.scale = function (sx, sy) {
       return this._concat(sx, 0, 0, sy, 0, 0);
     };
-    Matrix.prototype.scalePoint = function(_arg) {
+    Matrix.prototype.scalePoint = function (_arg) {
       var x, y;
       x = _arg.x, y = _arg.y;
       return this.scale(x, y);
     };
-    Matrix.prototype.rotate = function(angle) {
+    Matrix.prototype.rotate = function (angle) {
       var c, s;
       c = _cos(angle);
       s = _sin(angle);
       return this._concat(c, s, -s, c, 0, 0);
     };
-    Matrix.prototype.skew = function(skewX, skewY) {
+    Matrix.prototype.skew = function (skewX, skewY) {
       return this._concat(0, _tan(skewY), _tan(skewX), 0, 0, 0);
     };
-    Matrix.prototype.invert = function() {
+    Matrix.prototype.invert = function () {
       var d, ox, oy, xx, xy, yx, yy;
       xx = this.xx;
       xy = this.xy;
@@ -1161,17 +1170,17 @@ http:#www.quasimondo.com
       this.oy = (xy * ox - xx * oy) / d;
       return this;
     };
-    Matrix.prototype.transformPoint = function(_arg) {
+    Matrix.prototype.transformPoint = function (_arg) {
       var x, y;
       x = _arg.x, y = _arg.y;
       return new Point(this.xx * x + this.yx * y + this.ox, this.xy * x + this.yy * y + this.oy);
     };
-    Matrix.prototype.deltaTransformPoint = function(_arg) {
+    Matrix.prototype.deltaTransformPoint = function (_arg) {
       var x, y;
       x = _arg.x, y = _arg.y;
       return new Point(this.xx * x + this.yx * y, this.xy * x + this.yy * y);
     };
-    Matrix.prototype.createBox = function(scaleX, scaleY, rotation, tx, ty) {
+    Matrix.prototype.createBox = function (scaleX, scaleY, rotation, tx, ty) {
       var c, s;
       if (rotation == null) {
         rotation = 0;
@@ -1186,7 +1195,7 @@ http:#www.quasimondo.com
       s = _sin(rotation);
       return this._concat(scaleX * c, scaleY * s, -scaleX * s, scaleY * c, tx, ty);
     };
-    Matrix.prototype.createGradientBox = function(width, height, rotation, x, y) {
+    Matrix.prototype.createGradientBox = function (width, height, rotation, x, y) {
       if (rotation == null) {
         rotation = 0;
       }
@@ -1200,33 +1209,34 @@ http:#www.quasimondo.com
     };
     return Matrix;
   }();
-  exports.geom.Point = Point = function() {
-    Point.polar = function(distance, angle) {
+  exports.geom.Point = Point = function () {
+    Point.polar = function (distance, angle) {
       return new Point(distance * _cos(angle), distance * _sin(angle));
     };
-    Point.add = function(pt0, pt1) {
+    Point.add = function (pt0, pt1) {
       return new Point(pt0.x + pt1.x, pt0.y + pt1.y);
     };
-    Point.subtract = function(pt0, pt1) {
+    Point.subtract = function (pt0, pt1) {
       return new Point(pt0.x - pt1.x, pt0.y - pt1.y);
     };
-    Point.multiple = function(pt, num) {
+    Point.multiple = function (pt, num) {
       return new Point(pt.x * num, pt.y * num);
     };
-    Point.divide = function(pt, num) {
+    Point.divide = function (pt, num) {
       return new Point(pt.x / num, pt.y / num);
     };
-    Point.crossProduct = function(a, b) {
+    Point.crossProduct = function (a, b) {
       return a.distance * b.distance * _sin(b.angle - a.angle);
     };
-    Point.dotProduct = function(a, b) {};
-    Point.distance = function(a, b) {
+    Point.dotProduct = function (a, b) {
+    };
+    Point.distance = function (a, b) {
       var x, y;
       x = a.x - b.x;
       y = a.y - b.y;
       return Math.sqrt(x * x + y * y);
     };
-    Point.between = function(src, dst, ratio) {
+    Point.between = function (src, dst, ratio) {
       if (ratio == null) {
         ratio = .5;
       }
@@ -1236,45 +1246,46 @@ http:#www.quasimondo.com
       this.x = x != null ? x : 0;
       this.y = y != null ? y : 0;
     }
-    Point.prototype.distance = function() {
+
+    Point.prototype.distance = function () {
       return Math.sqrt(this.x * this.x + this.y * this.y);
     };
-    Point.prototype.angle = function() {
+    Point.prototype.angle = function () {
       return Math.atan2(this.y, this.x);
     };
-    Point.prototype.clone = function() {
+    Point.prototype.clone = function () {
       return new Point(this.x, this.y);
     };
-    Point.prototype.add = function(pt) {
+    Point.prototype.add = function (pt) {
       this.x += pt.x;
       this.y += pt.y;
       return this;
     };
-    Point.prototype.subtract = function(pt) {
+    Point.prototype.subtract = function (pt) {
       this.x -= pt.x;
       this.y -= pt.y;
       return this;
     };
-    Point.prototype.multiple = function(num) {
+    Point.prototype.multiple = function (num) {
       this.x *= num;
       this.y *= num;
       return this;
     };
-    Point.prototype.divide = function(num) {
+    Point.prototype.divide = function (num) {
       this.x /= num;
       this.y /= num;
       return this;
     };
-    Point.prototype.toString = function() {
+    Point.prototype.toString = function () {
       return "(" + this.x + ", " + this.y + ")";
     };
-    Point.prototype.toPolar = function() {
+    Point.prototype.toPolar = function () {
       return new Polar(this.distance, this.angle);
     };
-    Point.prototype.equals = function(pt) {
+    Point.prototype.equals = function (pt) {
       return this.x === pt.x && this.y === pt.y;
     };
-    Point.prototype.normalize = function(thickness) {
+    Point.prototype.normalize = function (thickness) {
       var ratio;
       if (thickness == null) {
         thickness = 1;
@@ -1284,7 +1295,7 @@ http:#www.quasimondo.com
       this.y *= ratio;
       return this;
     };
-    Point.prototype.transform = function(matrix) {
+    Point.prototype.transform = function (matrix) {
       var m;
       m = new Matrix(1, 0, 0, 1, this.x, this.y);
       m.concat(matrix);
@@ -1294,45 +1305,46 @@ http:#www.quasimondo.com
     };
     return Point;
   }();
-  exports.geom.Rectangle = Rectangle = function() {
+  exports.geom.Rectangle = Rectangle = function () {
     function Rectangle(x, y, width, height) {
       this.x = x != null ? x : 0;
       this.y = y != null ? y : 0;
       this.width = width != null ? width : 0;
       this.height = height != null ? height : 0;
     }
-    Rectangle.prototype.toString = function() {
+
+    Rectangle.prototype.toString = function () {
       return "[Rectangle x=" + this.x + " y=" + this.y + " width=" + this.width + " height=" + this.height + "]";
     };
-    Rectangle.prototype.left = function() {
+    Rectangle.prototype.left = function () {
       return Math.min(this.x, this.x + this.width);
     };
-    Rectangle.prototype.right = function() {
+    Rectangle.prototype.right = function () {
       return Math.max(this.x, this.x + this.width);
     };
-    Rectangle.prototype.top = function() {
+    Rectangle.prototype.top = function () {
       return Math.min(this.y, this.y + this.height);
     };
-    Rectangle.prototype.bottom = function() {
+    Rectangle.prototype.bottom = function () {
       return Math.max(this.y, this.y + this.height);
     };
-    Rectangle.prototype.clone = function() {
+    Rectangle.prototype.clone = function () {
       return new Rectangle(this.x, this.y, this.width, this.height);
     };
-    Rectangle.prototype.apply = function(rect) {
+    Rectangle.prototype.apply = function (rect) {
       this.x = rect.x;
       this.y = rect.y;
       this.width = rect.width;
       this.height = rect.height;
       return this;
     };
-    Rectangle.prototype.contains = function(x, y) {
+    Rectangle.prototype.contains = function (x, y) {
       return this.x < x && x < this.x + this.width && this.y < y && y < this.y + this.height;
     };
-    Rectangle.prototype.containsPoint = function(point) {
+    Rectangle.prototype.containsPoint = function (point) {
       return this.contains(point.x, point.y);
     };
-    Rectangle.prototype.contain = function(x, y) {
+    Rectangle.prototype.contain = function (x, y) {
       if (x < this.x) {
         this.width += this.x - x;
         this.x = x;
@@ -1347,40 +1359,40 @@ http:#www.quasimondo.com
       }
       return this;
     };
-    Rectangle.prototype.containPoint = function(point) {
+    Rectangle.prototype.containPoint = function (point) {
       return this.contain(point.x, point.y);
     };
-    Rectangle.prototype.offset = function(dx, dy) {
+    Rectangle.prototype.offset = function (dx, dy) {
       this.x += dx;
       this.y += dy;
       return this;
     };
-    Rectangle.prototype.offsetPoint = function(pt) {
+    Rectangle.prototype.offsetPoint = function (pt) {
       this.x += pt.x;
       this.y += pt.y;
       return this;
     };
-    Rectangle.prototype.inflate = function(dw, dh) {
+    Rectangle.prototype.inflate = function (dw, dh) {
       this.width += dw;
       this.height += dh;
       return this;
     };
-    Rectangle.prototype.inflatePoint = function(pt) {
+    Rectangle.prototype.inflatePoint = function (pt) {
       this.width += pt.x;
       this.height += pt.y;
       return this;
     };
-    Rectangle.prototype.deflate = function(dw, dh) {
+    Rectangle.prototype.deflate = function (dw, dh) {
       this.width -= dw;
       this.height -= dh;
       return this;
     };
-    Rectangle.prototype.deflatePoint = function(pt) {
+    Rectangle.prototype.deflatePoint = function (pt) {
       this.width -= pt.x;
       this.height -= pt.y;
       return this;
     };
-    Rectangle.prototype.union = function(rect) {
+    Rectangle.prototype.union = function (rect) {
       var b, b1, b2, h, l, r, r1, r2, t, w;
       l = this.x < rect.x ? this.x : rect.x;
       r1 = this.x + this.width;
@@ -1398,10 +1410,10 @@ http:#www.quasimondo.com
       this.height = h < 0 ? 0 : h;
       return this;
     };
-    Rectangle.prototype.isEmpty = function() {
+    Rectangle.prototype.isEmpty = function () {
       return this.x === 0 && this.y === 0 && this.width === 0 && this.height === 0;
     };
-    Rectangle.prototype.intersects = function(rect) {
+    Rectangle.prototype.intersects = function (rect) {
       var b, h, l, r, t, w;
       l = _max(this.x, rect.x);
       r = _min(this.x + this.width, rect.x + rect.width);
@@ -1417,7 +1429,7 @@ http:#www.quasimondo.com
       }
       return true;
     };
-    Rectangle.prototype.intersection = function(rect) {
+    Rectangle.prototype.intersection = function (rect) {
       var b, h, l, r, t, w;
       l = _max(this.x, rect.x);
       r = _min(this.x + this.width, rect.x + rect.width);
@@ -1433,7 +1445,7 @@ http:#www.quasimondo.com
       }
       return new Rectangle(l, t, w, h);
     };
-    Rectangle.prototype.measureFarDistance = function(x, y) {
+    Rectangle.prototype.measureFarDistance = function (x, y) {
       var b, db, dl, dr, dt, l, min, r, t;
       l = this.x;
       r = this.x + this.width;
@@ -1450,7 +1462,7 @@ http:#www.quasimondo.com
       min = _max(dl + dt, dr + dt, dr + db, dl + db);
       return _sqrt(min);
     };
-    Rectangle.prototype.adjustOuter = function() {
+    Rectangle.prototype.adjustOuter = function () {
       var x, y;
       x = Math.floor(this.x);
       y = Math.floor(this.y);
@@ -1466,7 +1478,7 @@ http:#www.quasimondo.com
       this.height = Math.ceil(this.height);
       return this;
     };
-    Rectangle.prototype.transform = function(matrix) {
+    Rectangle.prototype.transform = function (matrix) {
       var b, l, lb, lt, r, rb, rt, t;
       lt = new Matrix(1, 0, 0, 1, this.x, this.y);
       rt = new Matrix(1, 0, 0, 1, this.x + this.width, this.y);
@@ -1488,12 +1500,14 @@ http:#www.quasimondo.com
     };
     return Rectangle;
   }();
-  exports.history.History = History = function() {
-    function History() {}
+  exports.history.History = History = function () {
+    function History() {
+    }
+
     return History;
   }();
   exports.net.HTTP = HTTP = {
-    createFormData: function(data) {
+    createFormData: function (data) {
       var formData, name, value, _i, _len;
       formData = new FormData;
       for (value = _i = 0, _len = data.length; _i < _len; value = ++_i) {
@@ -1502,15 +1516,15 @@ http:#www.quasimondo.com
       }
       return formData;
     },
-    get: function(options, callback) {
+    get           : function (options, callback) {
       options.method = "get";
       return this.request(options, callback);
     },
-    post: function(options, callback) {
+    post          : function (options, callback) {
       options.method = "post";
       return this.request(options, callback);
     },
-    request: function(options, callback) {
+    request       : function (options, callback) {
       var contentType, data, dataType, method, url, xhr, _ref, _ref1;
       method = ((_ref = options.method) != null ? _ref.toLowerCase() : void 0) || "get";
       url = options.url;
@@ -1529,19 +1543,19 @@ http:#www.quasimondo.com
       }
       xhr = new (window.ActiveXObject || XMLHTTPRequest)("Microsoft.XMLHTTP");
       if (options.onProgress != null) {
-        xhr.upload.onprogress = function(e) {
+        xhr.upload.onprogress = function (e) {
           if (e.lengthComputable) {
             return options.onProgress(e.loaded / e.total);
           }
         };
       }
       if (options.onComplete != null) {
-        xhr.upload.onload = function(e) {
+        xhr.upload.onload = function (e) {
           return options.onComplete();
         };
       }
       if (callback != null) {
-        xhr.onreadystatechange = function(e) {
+        xhr.onreadystatechange = function (e) {
           var _ref2;
           if (xhr.readyState === 4) {
             if ((_ref2 = xhr.status) === 0 || _ref2 === 200) {
@@ -1549,7 +1563,7 @@ http:#www.quasimondo.com
               return callback(null, data);
             } else {
               return callback({
-                code: xhr.status,
+                code   : xhr.status,
                 message: "" + xhr.status + " (" + xhr.statusText + ")" + (xhr.responseText ? ": " + xhr.responseText : "")
               });
             }
@@ -1569,30 +1583,30 @@ http:#www.quasimondo.com
   };
   exports.net.URL = URL = {
     REG_EXP: /^((\w+:)(\/*)?(?:([^@]*)@)?(([^\/]+?)(?::(\d*))?))((\/[^\?#]*)?(\?([^#]*)?)?)?(#.*)?$/,
-    parse: function(urlStr, parseQueryString) {
+    parse  : function (urlStr, parseQueryString) {
       var auth, hash, host, hostname, href, key, obj, opt, origin, path, pathname, port, protocol, query, search, slashes, value, _ref;
       if (parseQueryString == null) {
         parseQueryString = false;
       }
       _ref = urlStr.match(URL.REG_EXP), href = _ref[0], origin = _ref[1], protocol = _ref[2], slashes = _ref[3], auth = _ref[4], host = _ref[5], hostname = _ref[6], port = _ref[7], path = _ref[8], pathname = _ref[9], search = _ref[10], query = _ref[11], hash = _ref[12];
       obj = {
-        href: href,
-        origin: origin,
+        href    : href,
+        origin  : origin,
         protocol: protocol,
-        host: host,
+        host    : host,
         hostname: hostname
       };
       if (parseQueryString) {
         query = QueryString.parse(query);
       }
       opt = {
-        auth: auth,
-        port: port,
-        path: path,
+        auth    : auth,
+        port    : port,
+        path    : path,
         pathname: pathname,
-        search: search,
-        query: query,
-        hash: hash
+        search  : search,
+        query   : query,
+        hash    : hash
       };
       if (slashes != null) {
         obj.slashes = true;
@@ -1609,7 +1623,7 @@ http:#www.quasimondo.com
       }
       return obj;
     },
-    format: function(urlObj) {
+    format : function (urlObj) {
       var auth, hash, host, hostname, pathname, port, protocol, protocolPostfix, query, search;
       protocol = urlObj.protocol, auth = urlObj.auth, host = urlObj.host, hostname = urlObj.hostname, port = urlObj.port, pathname = urlObj.pathname, search = urlObj.search, query = urlObj.query, hash = urlObj.hash;
       protocolPostfix = __indexOf.call(URL.CSS, protocol) >= 0 ? "://" : ":";
@@ -1637,16 +1651,17 @@ http:#www.quasimondo.com
       }
       return "" + protocol + protocolPostfix + host + pathname + search + hash;
     },
-    resolve: function(from, to) {}
+    resolve: function (from, to) {
+    }
   };
-  exports.serializer.JSON = JSON = function() {
+  exports.serializer.JSON = JSON = function () {
     if (window.JSON != null) {
       return window.JSON;
     } else {
       JSON = {};
-      (function() {
+      (function () {
         var cx, escapable, f, gap, indent, meta, quote, rep, str;
-        f = function(n) {
+        f = function (n) {
           if (n < 10) {
             return "0" + n;
           } else {
@@ -1654,14 +1669,14 @@ http:#www.quasimondo.com
           }
         };
         if (typeof Date.prototype.toJSON !== "function") {
-          Date.prototype.toJSON = function(key) {
+          Date.prototype.toJSON = function (key) {
             if (isFinite(this.valueOf())) {
               return this.getUTCFullYear() + "-" + f(this.getUTCMonth() + 1) + "-" + f(this.getUTCDate()) + "T" + f(this.getUTCHours()) + ":" + f(this.getUTCMinutes()) + ":" + f(this.getUTCSeconds()) + "Z";
             } else {
               return null;
             }
           };
-          String.prototype.toJSON = Number.prototype.toJSON = Boolean.prototype.toJSON = function(key) {
+          String.prototype.toJSON = Number.prototype.toJSON = Boolean.prototype.toJSON = function (key) {
             return this.valueOf();
           };
         }
@@ -1675,14 +1690,14 @@ http:#www.quasimondo.com
           "\n": "\\n",
           "\f": "\\f",
           "\r": "\\r",
-          '"': '\\"',
+          '"' : '\\"',
           "\\": "\\\\"
         };
         rep = null;
-        quote = function(string) {
+        quote = function (string) {
           escapable.lastIndex = 0;
           if (escapable.test(string)) {
-            return '"' + string.replace(escapable, function(a) {
+            return '"' + string.replace(escapable, function (a) {
               var c;
               c = meta[a];
               if (typeof c === "string") {
@@ -1695,7 +1710,7 @@ http:#www.quasimondo.com
             return '"' + string + '"';
           }
         };
-        str = function(key, holder) {
+        str = function (key, holder) {
           var i, k, length, mind, partial, v, value;
           mind = gap;
           value = holder[key];
@@ -1706,70 +1721,70 @@ http:#www.quasimondo.com
             value = rep.call(holder, key, value);
           }
           switch (typeof value) {
-           case "string":
-            return quote(value);
-           case "number":
-            if (isFinite(value)) {
-              return String(value);
-            } else {
-              return "null";
-            }
-           case "boolean":
-           case "null":
-            return String(value);
-           case "object":
-            if (!value) {
-              return "null";
-            }
-            gap += indent;
-            partial = [];
-            if (Object.prototype.toString.apply(value) === "[object Array]") {
-              length = value.length;
-              i = 0;
-              while (i < length) {
-                partial[i] = str(i, value) || "null";
-                i += 1;
+            case "string":
+              return quote(value);
+            case "number":
+              if (isFinite(value)) {
+                return String(value);
+              } else {
+                return "null";
               }
-              v = partial.length === 0 ? "[]" : gap ? "[\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "]" : "[" + partial.join(",") + "]";
+            case "boolean":
+            case "null":
+              return String(value);
+            case "object":
+              if (!value) {
+                return "null";
+              }
+              gap += indent;
+              partial = [];
+              if (Object.prototype.toString.apply(value) === "[object Array]") {
+                length = value.length;
+                i = 0;
+                while (i < length) {
+                  partial[i] = str(i, value) || "null";
+                  i += 1;
+                }
+                v = partial.length === 0 ? "[]" : gap ? "[\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "]" : "[" + partial.join(",") + "]";
+                gap = mind;
+                return v;
+              }
+              if (rep && typeof rep === "object") {
+                length = rep.length;
+                i = 0;
+                while (i < length) {
+                  if (typeof rep[i] === "string") {
+                    k = rep[i];
+                    v = str(k, value);
+                    if (v) {
+                      partial.push(quote(k) + (gap ? ": " : ":") + v);
+                    }
+                  }
+                  i += 1;
+                }
+              } else {
+                for (k in value) {
+                  if (Object.prototype.hasOwnProperty.call(value, k)) {
+                    v = str(k, value);
+                    if (v) {
+                      partial.push(quote(k) + (gap ? ": " : ":") + v);
+                    }
+                  }
+                }
+              }
+              if (partial.length === 0) {
+                v = "{}";
+              } else if (gap) {
+                v = "{\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "}";
+              } else {
+                v = "{" + partial.join(",") + "}";
+              }
               gap = mind;
               return v;
-            }
-            if (rep && typeof rep === "object") {
-              length = rep.length;
-              i = 0;
-              while (i < length) {
-                if (typeof rep[i] === "string") {
-                  k = rep[i];
-                  v = str(k, value);
-                  if (v) {
-                    partial.push(quote(k) + (gap ? ": " : ":") + v);
-                  }
-                }
-                i += 1;
-              }
-            } else {
-              for (k in value) {
-                if (Object.prototype.hasOwnProperty.call(value, k)) {
-                  v = str(k, value);
-                  if (v) {
-                    partial.push(quote(k) + (gap ? ": " : ":") + v);
-                  }
-                }
-              }
-            }
-            if (partial.length === 0) {
-              v = "{}";
-            } else if (gap) {
-              v = "{\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "}";
-            } else {
-              v = "{" + partial.join(",") + "}";
-            }
-            gap = mind;
-            return v;
           }
         };
         if (typeof JSON.stringify !== "function") {
-          JSON.stringify = function(value, replacer, space) {
+          JSON.stringify = function (value, replacer, space) {
             var i;
             gap = "";
             indent = "";
@@ -1794,9 +1809,9 @@ http:#www.quasimondo.com
           };
         }
         if (typeof JSON.parse !== "function") {
-          return JSON.parse = function(text, reviver) {
+          return JSON.parse = function (text, reviver) {
             var j, walk;
-            walk = function(holder, key) {
+            walk = function (holder, key) {
               var k, v, value;
               value = holder[key];
               if (value && typeof value === "object") {
@@ -1817,7 +1832,7 @@ http:#www.quasimondo.com
             text = String(text);
             cx.lastIndex = 0;
             if (cx.test(text)) {
-              text = text.replace(cx, function(a) {
+              text = text.replace(cx, function (a) {
                 return "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4);
               });
             }
@@ -1839,7 +1854,7 @@ http:#www.quasimondo.com
     }
   }();
   exports.serializer.QueryString = QueryString = {
-    stringify: function(data) {
+    stringify: function (data) {
       var name, tokens, value;
       tokens = [];
       for (name in data) {
@@ -1848,7 +1863,7 @@ http:#www.quasimondo.com
       }
       return tokens.join("&");
     },
-    parse: function(query) {
+    parse    : function (query) {
       var data, nv, token, tokens, _i, _len;
       if (!query) {
         return {};
@@ -1866,23 +1881,23 @@ http:#www.quasimondo.com
       return data;
     }
   };
-  exports.timers.requestAnimationFrame = requestAnimationFrame = function() {
-    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame || function() {
+  exports.timers.requestAnimationFrame = requestAnimationFrame = function () {
+    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame || function () {
       var counter;
       counter = 0;
-      return function(callback) {
+      return function (callback) {
         setTimeout(callback, 66);
         return counter++;
       };
     }();
   }();
   exports.utils.ArrayUtil = ArrayUtil = {
-    isArray: Array.isArray || function(arr) {
+    isArray    : Array.isArray || function (arr) {
       return Object.prototype.toString.call(arr) === "[object Array]";
     },
-    indexOf: typeof Array.prototype.indexOf === "function" ? function(array, searchElement, fromIndex) {
+    indexOf    : typeof Array.prototype.indexOf === "function" ? function (array, searchElement, fromIndex) {
       return Array.prototype.indexOf.apply(Array.prototype.shift.call(arguments), arguments);
-    } : function(array, searchElement, fromIndex) {
+    } : function (array, searchElement, fromIndex) {
       var i, len, _i;
       if (fromIndex == null) {
         fromIndex = 0;
@@ -1899,9 +1914,9 @@ http:#www.quasimondo.com
       }
       return -1;
     },
-    lastIndexOf: typeof Array.prototype.lastIndexOf === "function" ? function(array, searchElement, fromIndex) {
+    lastIndexOf: typeof Array.prototype.lastIndexOf === "function" ? function (array, searchElement, fromIndex) {
       return Array.prototype.lastIndexOf.apply(Array.prototype.shift.call(arguments), arguments);
-    } : function(array, searchElement, fromIndex) {
+    } : function (array, searchElement, fromIndex) {
       var i, len, _i;
       if (fromIndex == null) {
         fromIndex = Number.MAX_VALUE;
@@ -1920,7 +1935,7 @@ http:#www.quasimondo.com
       }
       return -1;
     },
-    random: function(array, length) {
+    random     : function (array, length) {
       var _results;
       if (length == null) {
         length = 1;
@@ -1936,7 +1951,7 @@ http:#www.quasimondo.com
         return _results;
       }
     },
-    shuffle: function(array) {
+    shuffle    : function (array) {
       var i, j, v;
       i = array.length;
       while (i) {
@@ -1949,17 +1964,17 @@ http:#www.quasimondo.com
     }
   };
   exports.utils.CanvasUtil = CanvasUtil = {
-    createCanvas: function(width, height) {
+    createCanvas: function (width, height) {
       var canvas;
       canvas = document.createElement("canvas");
       canvas.width = width;
       canvas.height = height;
       return canvas;
     },
-    clearCanvas: function(canvas) {
+    clearCanvas : function (canvas) {
       return canvas.width = canvas.width;
     },
-    setAlpha: function(imageData, alpha) {
+    setAlpha    : function (imageData, alpha) {
       var d, i, _i, _ref, _results;
       d = imageData.data;
       _results = [];
@@ -1970,7 +1985,7 @@ http:#www.quasimondo.com
     }
   };
   exports.utils.CSSUtil = CSSUtil = {
-    parseMatrixString: function(str) {
+    parseMatrixString: function (str) {
       var $, parseInt;
       $ = str.match(/matrix\(\s*([^,]+)\s*,\s*([^,]+)\s*,\s*([^,]+)\s*,\s*([^,]+)\s*,\s*([^,]+)\s*,\s*([^,]+)\s*\)/);
       if ($ == null) {
@@ -1982,8 +1997,8 @@ http:#www.quasimondo.com
     }
   };
   exports.utils.DateUtil = DateUtil = {
-    _R_PATTERNS: /%[AaBbCcDdeFHhIjkLlMmNnPpRrSsTtUuvVWwXxYyZz%]/g,
-    keywords: {
+    _R_PATTERNS       : /%[AaBbCcDdeFHhIjkLlMmNnPpRrSsTtUuvVWwXxYyZz%]/g,
+    keywords          : {
       A: [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
       a: [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ],
       B: [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
@@ -1991,149 +2006,150 @@ http:#www.quasimondo.com
       p: [ "AM", "PM" ],
       P: [ "am", "pm" ]
     },
-    _getValue: function(date, name, isUTC) {
+    _getValue         : function (date, name, isUTC) {
       return date["get" + (isUTC ? "UTC" : "") + name]();
     },
-    _stringify: function(date, pattern, isUTC) {
+    _stringify        : function (date, pattern, isUTC) {
       var day, getDays, getISO8601Weeks, getMondayWeeks, getSundayWeeks, keywords, matched, minutes, padBlank, padLeft, padZero, padZero3, sign, stringify, _getValue;
       keywords = DateUtil.keywords, _getValue = DateUtil._getValue, stringify = DateUtil.stringify, getDays = DateUtil.getDays, getSundayWeeks = DateUtil.getSundayWeeks, getMondayWeeks = DateUtil.getMondayWeeks, getISO8601Weeks = DateUtil.getISO8601Weeks;
       padLeft = StringUtil.padLeft;
-      padZero = function(num) {
+      padZero = function (num) {
         return padLeft(num, 2, "0");
       };
-      padZero3 = function(num) {
+      padZero3 = function (num) {
         return padLeft(num, 3, "0");
       };
-      padBlank = function(num) {
+      padBlank = function (num) {
         return padLeft(num, 2, " ");
       };
       switch (pattern) {
-       case "%A":
-        return keywords.A[_getValue(date, "Day", isUTC)];
-       case "%a":
-        return keywords.a[_getValue(date, "Day", isUTC)];
-       case "%B":
-        return keywords.B[_getValue(date, "Month", isUTC)];
-       case "%b":
-       case "%h":
-        return keywords.b[_getValue(date, "Month", isUTC)];
-       case "%C":
-        return _getValue(date, "FullYear", isUTC) / 100 >> 0;
-       case "%c":
-        return stringify(date, "%a %b %e %H:%M:%S %Y", isUTC);
-       case "%D":
-        return stringify(date, "%m/%d/%y", isUTC);
-       case "%d":
-        return padZero(_getValue(date, "Date", isUTC));
-       case "%e":
-        return padBlank(_getValue(date, "Date", isUTC));
-       case "%F":
-        return stringify(date, "%Y-%m-%d", isUTC);
-       case "%H":
-        return padZero(_getValue(date, "Hours", isUTC));
-       case "%I":
-        return padZero(_getValue(date, "Hours", isUTC) % 12);
-       case "%j":
-        return padZero3(getDays(date));
-       case "%k":
-        return padBlank(_getValue(date, "Hours", isUTC));
-       case "%L":
-       case "%N":
-        return padZero3(_getValue(date, "Milliseconds", isUTC));
-       case "%l":
-        return padBlank(_getValue(date, "Hours", isUTC) % 12);
-       case "%M":
-        return padZero(_getValue(date, "Minutes", isUTC));
-       case "%m":
-        return padZero(_getValue(date, "Month", isUTC) + 1);
-       case "%n":
-        return "\n";
-       case "%P":
-        return keywords.P[_getValue(date, "Hours", isUTC) / 12 >> 0];
-       case "%p":
-        return keywords.p[_getValue(date, "Hours", isUTC) / 12 >> 0];
-       case "%R":
-        return stringify(date, "%H:%M", isUTC);
-       case "%r":
-        return stringify(date, "%I:%M:%S %p", isUTC);
-       case "%S":
-        return padZero(_getValue(date, "Seconds", isUTC));
-       case "%s":
-        return date.getTime() / 1e3 >> 0;
-       case "%T":
-        return stringify(date, "%H:%M:%S", isUTC);
-       case "%t":
-        return "	";
-       case "%U":
-        return padZero(getSundayWeeks(date, isUTC));
-       case "%u":
-        day = _getValue(date, "Day", isUTC);
-        if (day === 0) {
-          return 7;
-        }
-        return day;
-       case "%v":
-        return stringify(date, "%e-%b-%Y", isUTC).toUpperCase();
-       case "%V":
-        return padZero(getISO8601Weeks(date, isUTC));
-       case "%W":
-        return padZero(getMondayWeeks(date, isUTC));
-       case "%w":
-        return _getValue(date, "Day", isUTC);
-       case "%X":
-        return stringify(date, "%H:%M:%S", isUTC);
-       case "%x":
-        return stringify(date, "%m/%d/%y", isUTC);
-       case "%Y":
-        return _getValue(date, "FullYear", isUTC);
-       case "%y":
-        return _getValue(date, "FullYear", isUTC) % 100;
-       case "%Z":
-        if ((matched = date.toString().match(/\((\w+)\)/)) != null) {
-          return matched[1];
-        }
-        return void 0;
-       case "%z":
-        minutes = date.getTimezoneOffset() * -1;
-        if (minutes < 0) {
-          sign = "-";
-          minutes *= -1;
-        } else {
-          sign = "+";
-        }
-        return "" + sign + padZero(minutes / 60) + padZero(minutes % 60);
-       case "%%":
-        return "%";
-       default:
-        throw new Error("Unrecognized pattern '" + pattern + "'");
+        case "%A":
+          return keywords.A[_getValue(date, "Day", isUTC)];
+        case "%a":
+          return keywords.a[_getValue(date, "Day", isUTC)];
+        case "%B":
+          return keywords.B[_getValue(date, "Month", isUTC)];
+        case "%b":
+        case "%h":
+          return keywords.b[_getValue(date, "Month", isUTC)];
+        case "%C":
+          return _getValue(date, "FullYear", isUTC) / 100 >> 0;
+        case "%c":
+          return stringify(date, "%a %b %e %H:%M:%S %Y", isUTC);
+        case "%D":
+          return stringify(date, "%m/%d/%y", isUTC);
+        case "%d":
+          return padZero(_getValue(date, "Date", isUTC));
+        case "%e":
+          return padBlank(_getValue(date, "Date", isUTC));
+        case "%F":
+          return stringify(date, "%Y-%m-%d", isUTC);
+        case "%H":
+          return padZero(_getValue(date, "Hours", isUTC));
+        case "%I":
+          return padZero(_getValue(date, "Hours", isUTC) % 12);
+        case "%j":
+          return padZero3(getDays(date));
+        case "%k":
+          return padBlank(_getValue(date, "Hours", isUTC));
+        case "%L":
+        case "%N":
+          return padZero3(_getValue(date, "Milliseconds", isUTC));
+        case "%l":
+          return padBlank(_getValue(date, "Hours", isUTC) % 12);
+        case "%M":
+          return padZero(_getValue(date, "Minutes", isUTC));
+        case "%m":
+          return padZero(_getValue(date, "Month", isUTC) + 1);
+        case "%n":
+          return "\n";
+        case "%P":
+          return keywords.P[_getValue(date, "Hours", isUTC) / 12 >> 0];
+        case "%p":
+          return keywords.p[_getValue(date, "Hours", isUTC) / 12 >> 0];
+        case "%R":
+          return stringify(date, "%H:%M", isUTC);
+        case "%r":
+          return stringify(date, "%I:%M:%S %p", isUTC);
+        case "%S":
+          return padZero(_getValue(date, "Seconds", isUTC));
+        case "%s":
+          return date.getTime() / 1e3 >> 0;
+        case "%T":
+          return stringify(date, "%H:%M:%S", isUTC);
+        case "%t":
+          return "	";
+        case "%U":
+          return padZero(getSundayWeeks(date, isUTC));
+        case "%u":
+          day = _getValue(date, "Day", isUTC);
+          if (day === 0) {
+            return 7;
+          }
+          return day;
+        case "%v":
+          return stringify(date, "%e-%b-%Y", isUTC).toUpperCase();
+        case "%V":
+          return padZero(getISO8601Weeks(date, isUTC));
+        case "%W":
+          return padZero(getMondayWeeks(date, isUTC));
+        case "%w":
+          return _getValue(date, "Day", isUTC);
+        case "%X":
+          return stringify(date, "%H:%M:%S", isUTC);
+        case "%x":
+          return stringify(date, "%m/%d/%y", isUTC);
+        case "%Y":
+          return _getValue(date, "FullYear", isUTC);
+        case "%y":
+          return _getValue(date, "FullYear", isUTC) % 100;
+        case "%Z":
+          if ((matched = date.toString().match(/\((\w+)\)/)) != null) {
+            return matched[1];
+          }
+          return void 0;
+        case "%z":
+          minutes = date.getTimezoneOffset() * -1;
+          if (minutes < 0) {
+            sign = "-";
+            minutes *= -1;
+          } else {
+            sign = "+";
+          }
+          return "" + sign + padZero(minutes / 60) + padZero(minutes % 60);
+        case "%%":
+          return "%";
+        default:
+          throw new Error("Unrecognized pattern '" + pattern + "'");
       }
     },
-    stringify: function(date, format, isUTC) {
+    stringify         : function (date, format, isUTC) {
       if (format == null) {
         format = "%a %b %d %T %Z %Y";
       }
       if (isUTC == null) {
         isUTC = false;
       }
-      return format.replace(DateUtil._R_PATTERNS, function(pattern) {
+      return format.replace(DateUtil._R_PATTERNS, function (pattern) {
         return DateUtil._stringify(date, pattern, isUTC);
       });
     },
-    _parse: function(char, pattern, isUTC) {},
-    parse: function(str, format, isUTC) {
+    _parse            : function (char, pattern, isUTC) {
+    },
+    parse             : function (str, format, isUTC) {
       if (isUTC == null) {
         isUTC = false;
       }
-      return format.replace(DateUtil._R_PATTERNS, function(pattern) {
+      return format.replace(DateUtil._R_PATTERNS, function (pattern) {
         return console.log(arguments);
       });
     },
-    getDays: function(date) {
+    getDays           : function (date) {
       var newYearsDay;
       newYearsDay = new Date(date.getFullYear(), 0, 1);
       return Math.ceil((date.getTime() - newYearsDay.getTime() + 1) / (24 * 60 * 60 * 1e3));
     },
-    getSundayWeeks: function(date, isUTC) {
+    getSundayWeeks    : function (date, isUTC) {
       var getDays, newYearsDay, paddingDays, totalDays, y, _getValue;
       _getValue = DateUtil._getValue, getDays = DateUtil.getDays;
       y = _getValue(date, "FullYear", isUTC);
@@ -2145,7 +2161,7 @@ http:#www.quasimondo.com
       }
       return Math.ceil((totalDays - paddingDays) / 7);
     },
-    getMondayWeeks: function(date, isUTC) {
+    getMondayWeeks    : function (date, isUTC) {
       var getDays, newYearsDay, paddingDays, totalDays, y, _getValue;
       _getValue = DateUtil._getValue, getDays = DateUtil.getDays;
       y = _getValue(date, "FullYear", isUTC);
@@ -2157,7 +2173,7 @@ http:#www.quasimondo.com
       }
       return Math.ceil((totalDays - paddingDays) / 7);
     },
-    getISO8601Weeks: function(date, isUTC) {
+    getISO8601Weeks   : function (date, isUTC) {
       var d, getDays, getISO8601Weeks, m, newYearsDay, newYearsEveDay, paddingDays, totalDays, y, _getValue;
       _getValue = DateUtil._getValue, getDays = DateUtil.getDays, getISO8601Weeks = DateUtil.getISO8601Weeks;
       y = _getValue(date, "FullYear", isUTC);
@@ -2178,15 +2194,15 @@ http:#www.quasimondo.com
         return Math.ceil((totalDays - paddingDays) / 7);
       }
     },
-    getLastDateOfMonth: function(y, m) {
+    getLastDateOfMonth: function (y, m) {
       return new Date(y, m, 0);
     },
-    leap: function(year) {
+    leap              : function (year) {
       return year % 4 === 0 && year % 100 !== 0 || year % 400 === 0;
     }
   };
   exports.utils.EventUtil = EventUtil = {
-    getMousePoint: function(e) {
+    getMousePoint: function (e) {
       var _ref;
       e = ((_ref = e.touches) != null ? _ref[0] : void 0) || e;
       return {
@@ -2198,7 +2214,7 @@ http:#www.quasimondo.com
   exports.utils.MathUtil = MathUtil = {
     DEGREE_PER_RADIAN: 180 / Math.PI,
     RADIAN_PER_DEGREE: Math.PI / 180,
-    nearestIn: function(number, numbers) {
+    nearestIn        : function (number, numbers) {
       var compared, n, _i, _len;
       compared = [];
       for (_i = 0, _len = numbers.length; _i < _len; _i++) {
@@ -2207,10 +2223,10 @@ http:#www.quasimondo.com
       }
       return numbers[compared.indexOf(Math.min.apply(null, compared))];
     },
-    randomBetween: function(a, b) {
+    randomBetween    : function (a, b) {
       return a + (b - a) * Math.random();
     },
-    convergeBetween: function(number, a, b) {
+    convergeBetween  : function (number, a, b) {
       var max, min;
       min = Math.min(a, b);
       max = Math.max(a, b);
@@ -2224,7 +2240,7 @@ http:#www.quasimondo.com
     }
   };
   exports.utils.ObjectUtil = ObjectUtil = {
-    keys: Object.keys || function(obj) {
+    keys: Object.keys || function (obj) {
       var key, type, _results;
       if ((type = typeof obj) !== "object" && type !== "function") {
         throw new TypeError("" + obj + " isn't Object object");
@@ -2238,9 +2254,9 @@ http:#www.quasimondo.com
     }
   };
   exports.utils.StringUtil = StringUtil = {
-    dump: function(obj) {
+    dump           : function (obj) {
       var format;
-      format = function(obj, indent, prefix, postfix) {
+      format = function (obj, indent, prefix, postfix) {
         var body, i, indentChars, key, len, val, _i, _len;
         if (prefix == null) {
           prefix = "";
@@ -2257,41 +2273,41 @@ http:#www.quasimondo.com
         indent += 1;
         body = "";
         switch (typeof obj) {
-         case "function":
-          return body += "function () { [snip] }";
-         case "string":
-          return body += "" + indentChars + prefix + '"' + obj + '"' + postfix;
-         case "number":
-          return body += "" + indentChars + prefix + obj + postfix;
-         default:
-          if (ArrayUtil.isArray(obj)) {
-            body += "" + indentChars + prefix + "[\n";
-            len = obj.length;
-            for (i = _i = 0, _len = obj.length; _i < _len; i = ++_i) {
-              val = obj[i];
-              body += "" + format(val, indent, i + ": ", i === len - 1 ? "" : ",");
+          case "function":
+            return body += "function () { [snip] }";
+          case "string":
+            return body += "" + indentChars + prefix + '"' + obj + '"' + postfix;
+          case "number":
+            return body += "" + indentChars + prefix + obj + postfix;
+          default:
+            if (ArrayUtil.isArray(obj)) {
+              body += "" + indentChars + prefix + "[\n";
+              len = obj.length;
+              for (i = _i = 0, _len = obj.length; _i < _len; i = ++_i) {
+                val = obj[i];
+                body += "" + format(val, indent, i + ": ", i === len - 1 ? "" : ",");
+              }
+              return body += "" + indentChars + "]" + postfix;
+            } else {
+              body += "" + indentChars + prefix + "{\n";
+              len = ObjectUtil.keys(obj).length;
+              i = 0;
+              for (key in obj) {
+                val = obj[key];
+                body += "" + format(val, indent, key + ": ", i === len - 1 ? "" : ",");
+                i += 1;
+              }
+              return body += "" + indentChars + "}" + postfix;
             }
-            return body += "" + indentChars + "]" + postfix;
-          } else {
-            body += "" + indentChars + prefix + "{\n";
-            len = ObjectUtil.keys(obj).length;
-            i = 0;
-            for (key in obj) {
-              val = obj[key];
-              body += "" + format(val, indent, key + ": ", i === len - 1 ? "" : ",");
-              i += 1;
-            }
-            return body += "" + indentChars + "}" + postfix;
-          }
         }
       };
       return format(obj, 0);
     },
-    parseBoolean: function(str) {
+    parseBoolean   : function (str) {
       str = str.toLowerCase();
       return str === "true" || str === "1";
     },
-    pad: function(string, length, padding) {
+    pad            : function (string, length, padding) {
       if (padding == null) {
         padding = " ";
       }
@@ -2301,7 +2317,7 @@ http:#www.quasimondo.com
       }
       return string;
     },
-    padLeft: function(string, length, padding) {
+    padLeft        : function (string, length, padding) {
       if (padding == null) {
         padding = " ";
       }
@@ -2311,7 +2327,7 @@ http:#www.quasimondo.com
       }
       return string;
     },
-    padRight: function(string, length, padding) {
+    padRight       : function (string, length, padding) {
       if (padding == null) {
         padding = " ";
       }
@@ -2321,10 +2337,10 @@ http:#www.quasimondo.com
       }
       return string;
     },
-    escape: function(str) {
+    escape         : function (str) {
       return ("" + str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;").replace(/\//g, "&#x2F;");
     },
-    createRandom: function(length, chars) {
+    createRandom   : function (length, chars) {
       var len, str;
       if (chars == null) {
         chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -2336,7 +2352,7 @@ http:#www.quasimondo.com
       }
       return str;
     },
-    formatWithComma: function(str) {
+    formatWithComma: function (str) {
       var i, j, res;
       str = "" + str;
       i = str.length;
@@ -2348,14 +2364,15 @@ http:#www.quasimondo.com
       return res;
     }
   };
-  exports.filters.KernelFilter = KernelFilter = function(_super) {
+  exports.filters.KernelFilter = KernelFilter = function (_super) {
     __extends(KernelFilter, _super);
     function KernelFilter(radiusX, radiusY, kernel) {
       this.radiusX = radiusX;
       this.radiusY = radiusY;
       this.kernel = kernel;
     }
-    KernelFilter.prototype.scan = function(imageData, newImageData) {
+
+    KernelFilter.prototype.scan = function (imageData, newImageData) {
       var pixels, x, y, _i, _j, _k, _ref, _ref1, _ref2;
       pixels = this._getPixels(imageData);
       for (y = _i = 0, _ref = this.radiusY - 1; _i < _ref; y = _i += 1) {
@@ -2371,12 +2388,12 @@ http:#www.quasimondo.com
       this._setPixels(newImageData, pixels);
       return newImageData;
     };
-    KernelFilter.prototype._evaluatePixel = function(pixels, x, y, width, height) {
+    KernelFilter.prototype._evaluatePixel = function (pixels, x, y, width, height) {
       var p;
       p = this._runKernel(this.kernel, pixels, x, y, width, height);
       return p;
     };
-    KernelFilter.prototype._runKernel = function(kernel, pixels, x, y, width, height) {
+    KernelFilter.prototype._runKernel = function (kernel, pixels, x, y, width, height) {
       var a, absX, absY, b, f, g, h, i, p, r, relX, relY, w, _i, _j;
       r = g = b = a = 0;
       h = this.radiusY * 2 - 1;
@@ -2399,9 +2416,9 @@ http:#www.quasimondo.com
     };
     return KernelFilter;
   }(Filter);
-  exports.timers.Ticker = Ticker = function(_super) {
+  exports.timers.Ticker = Ticker = function (_super) {
     __extends(Ticker, _super);
-    Ticker.getInstance = function() {
+    Ticker.getInstance = function () {
       if (Ticker._instance != null) {
         return Ticker._instance;
       } else {
@@ -2417,11 +2434,12 @@ http:#www.quasimondo.com
       Ticker._isInternal = false;
       Ticker.__super__.constructor.call(this);
     }
-    Ticker.prototype.start = function() {
+
+    Ticker.prototype.start = function () {
       this.running = true;
       return requestAnimationFrame(this._onTick);
     };
-    Ticker.prototype._onTick = function() {
+    Ticker.prototype._onTick = function () {
       var event;
       if (this.running) {
         event = new Event("tick");
@@ -2429,12 +2447,12 @@ http:#www.quasimondo.com
         return this.dispatchEvent(event);
       }
     };
-    Ticker.prototype.stop = function() {
+    Ticker.prototype.stop = function () {
       return this.running = false;
     };
     return Ticker;
   }(EventDispatcher);
-  exports.filters.BilateralFilter = BilateralFilter = function(_super) {
+  exports.filters.BilateralFilter = BilateralFilter = function (_super) {
     __extends(BilateralFilter, _super);
     function BilateralFilter(radiusX, radiusY, sigmaDistance, sigmaColor) {
       var dx, dy, i, kernel, s, _i, _j, _k, _ref, _ref1, _ref2;
@@ -2458,7 +2476,8 @@ http:#www.quasimondo.com
         this.colorWeightMap[i] = Math.exp(-i * i * s);
       }
     }
-    BilateralFilter.prototype._runKernel = function(kernel, pixels, x, y, width, height) {
+
+    BilateralFilter.prototype._runKernel = function (kernel, pixels, x, y, width, height) {
       var absX, absY, b, cB, cG, cR, g, h, i, p, r, relX, relY, totalWeight, w, weight, _i, _j;
       p = pixels[y + this.radiusY - 1][x + this.radiusX - 1];
       cR = p[0];
@@ -2486,7 +2505,7 @@ http:#www.quasimondo.com
     };
     return BilateralFilter;
   }(KernelFilter);
-  exports.filters.BlurFilter = BlurFilter = function(_super) {
+  exports.filters.BlurFilter = BlurFilter = function (_super) {
     __extends(BlurFilter, _super);
     function BlurFilter(radiusX, radiusY) {
       var invert, kernel, length, side;
@@ -2499,14 +2518,16 @@ http:#www.quasimondo.com
       }
       BlurFilter.__super__.constructor.call(this, radiusX, radiusY, kernel);
     }
+
     return BlurFilter;
   }(KernelFilter);
-  exports.filters.DoubleFilter = DoubleFilter = function(_super) {
+  exports.filters.DoubleFilter = DoubleFilter = function (_super) {
     __extends(DoubleFilter, _super);
     function DoubleFilter() {
       return DoubleFilter.__super__.constructor.apply(this, arguments);
     }
-    DoubleFilter.prototype._evaluatePixel = function(pixels, x, y, width, height) {
+
+    DoubleFilter.prototype._evaluatePixel = function (pixels, x, y, width, height) {
       var b, g, h, i, p, r, w, _i, _ref;
       r = g = b = 0;
       h = this.radiusY * 2 - 1;
@@ -2524,7 +2545,7 @@ http:#www.quasimondo.com
     };
     return DoubleFilter;
   }(KernelFilter);
-  exports.filters.GaussianFilter = GaussianFilter = function(_super) {
+  exports.filters.GaussianFilter = GaussianFilter = function (_super) {
     __extends(GaussianFilter, _super);
     function GaussianFilter(radiusX, radiusY, sigma) {
       var dx, dy, i, kernel, s, w, weight, _i, _j, _k, _ref, _ref1, _ref2;
@@ -2546,9 +2567,10 @@ http:#www.quasimondo.com
       }
       GaussianFilter.__super__.constructor.call(this, radiusX, radiusY, kernel);
     }
+
     return GaussianFilter;
   }(KernelFilter);
-  exports.filters.LaplacianFilter = LaplacianFilter = function(_super) {
+  exports.filters.LaplacianFilter = LaplacianFilter = function (_super) {
     __extends(LaplacianFilter, _super);
     function LaplacianFilter(is4Direction) {
       if (is4Direction == null) {
@@ -2556,14 +2578,16 @@ http:#www.quasimondo.com
       }
       LaplacianFilter.__super__.constructor.call(this, 2, 2, is4Direction ? [ 1, 1, 1, 1, -8, 1, 1, 1, 1 ] : [ 0, 1, 0, 1, -4, 1, 0, 1, 0 ]);
     }
+
     return LaplacianFilter;
   }(KernelFilter);
-  exports.filters.MedianFilter = MedianFilter = function(_super) {
+  exports.filters.MedianFilter = MedianFilter = function (_super) {
     __extends(MedianFilter, _super);
     function MedianFilter() {
       return MedianFilter.__super__.constructor.apply(this, arguments);
     }
-    MedianFilter.prototype._runKernel = function(kernel, pixels, x, y, width, height) {
+
+    MedianFilter.prototype._runKernel = function (kernel, pixels, x, y, width, height) {
       var absX, absY, h, i, ps, relX, relY, w, _i, _j;
       ps = [];
       h = this.radiusY * 2 - 1;
@@ -2580,7 +2604,7 @@ http:#www.quasimondo.com
       ps.sort(this._sortAsSum);
       return ps[i >> 1];
     };
-    MedianFilter.prototype._sortAsSum = function(a, b) {
+    MedianFilter.prototype._sortAsSum = function (a, b) {
       var i, sumA, sumB, _i;
       sumA = sumB = 0;
       for (i = _i = 0; _i < 3; i = _i += 1) {
@@ -2591,7 +2615,7 @@ http:#www.quasimondo.com
     };
     return MedianFilter;
   }(KernelFilter);
-  exports.filters.UnsharpMaskFilter = UnsharpMaskFilter = function(_super) {
+  exports.filters.UnsharpMaskFilter = UnsharpMaskFilter = function (_super) {
     __extends(UnsharpMaskFilter, _super);
     function UnsharpMaskFilter(radiusX, radiusY, amount) {
       var i, invert, kernel, length, side;
@@ -2606,20 +2630,29 @@ http:#www.quasimondo.com
       kernel[length >> 1] = 1 + (1 - invert) * this.amount;
       UnsharpMaskFilter.__super__.constructor.call(this, radiusX, radiusY, kernel);
     }
+
     return UnsharpMaskFilter;
   }(KernelFilter);
-  exports.filters.PrewittFilter = PrewittFilter = function(_super) {
+  exports.filters.PrewittFilter = PrewittFilter = function (_super) {
     __extends(PrewittFilter, _super);
     function PrewittFilter() {
-      PrewittFilter.__super__.constructor.call(this, 2, 2, [ [ -1, 0, 1, -1, 0, 1, -1, 0, 1 ], [ -1, -1, -1, 0, 0, 0, 1, 1, 1 ] ]);
+      PrewittFilter.__super__.constructor.call(this, 2, 2, [
+        [ -1, 0, 1, -1, 0, 1, -1, 0, 1 ],
+        [ -1, -1, -1, 0, 0, 0, 1, 1, 1 ]
+      ]);
     }
+
     return PrewittFilter;
   }(DoubleFilter);
-  exports.filters.SobelFilter = SobelFilter = function(_super) {
+  exports.filters.SobelFilter = SobelFilter = function (_super) {
     __extends(SobelFilter, _super);
     function SobelFilter() {
-      SobelFilter.__super__.constructor.call(this, 2, 2, [ [ -1, 0, 1, -2, 0, 2, -1, 0, 1 ], [ -1, -2, -1, 0, 0, 0, 1, 2, 1 ] ]);
+      SobelFilter.__super__.constructor.call(this, 2, 2, [
+        [ -1, 0, 1, -2, 0, 2, -1, 0, 1 ],
+        [ -1, -2, -1, 0, 0, 0, 1, 2, 1 ]
+      ]);
     }
+
     return SobelFilter;
   }(DoubleFilter);
 }).call(this);
