@@ -8,7 +8,7 @@
     , util = require('util')
 
     , PACKAGE_NAME = 'muon'
-    , VERSION = '0.1.1'
+    , VERSION = '0.1.2'
     , INPUT = 'src'
     , OUTPUT = 'lib'
     , TEST = 'test';
