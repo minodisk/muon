@@ -1,4 +1,5 @@
-var requestAnimationFrame = function () {
+var EventEmitter = require('muon.events.EventEmitter')
+  , requestAnimationFrame = function () {
   return window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame ||
@@ -13,4 +14,8 @@ var requestAnimationFrame = function () {
     }();
 }();
 
-this.requestAnimationFrame = requestAnimationFrame;
+function Ticker() {
+
+}
+
+module.exports = Ticker;

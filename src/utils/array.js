@@ -1,28 +1,26 @@
-var array = {}
-  , _random = Math.random
+var _random = Math.random
   , _shift = Array.prototype.shift
   , _slice = Array.prototype.slice
   , _toString = Object.prototype.toString;
 
 /**
- *
  * @type {*|Function}
  */
-array.isArray = Array.isArray || function (arr) {
+exports.isArray = Array.isArray || function (arr) {
   return _toString.call(arr) === '[object Array]';
 };
 
-array.indexOf = typeof Array.prototype.indexOf === 'function' ?
+exports.indexOf = typeof Array.prototype.indexOf === 'function' ?
   function (arr, searchElement, fromIndex) {
     return Array.prototype.indexOf.apply(_shift.call(arguments), arguments);
   }
   :
-  function (array, searchElement, fromIndex) {
-    if (array == null) {
+  function (arr, searchElement, fromIndex) {
+    if (arr == null) {
       throw new TypeError('array.indexOf called on null or undefined')
     }
 
-    var len = array.length;
+    var len = arr.length;
     if (len === 0) {
       return -1;
     }
@@ -41,7 +39,7 @@ array.indexOf = typeof Array.prototype.indexOf === 'function' ?
       return -1;
     }
     for (; i < len; i++) {
-      if (array[i] === searchElement) {
+      if (arr[i] === searchElement) {
         return i;
       }
     }
@@ -51,17 +49,17 @@ array.indexOf = typeof Array.prototype.indexOf === 'function' ?
 /*
  should be tested
  */
-array.lastIndexOf = typeof Array.prototype.lastIndexOf === 'function' ?
+exports.lastIndexOf = typeof Array.prototype.lastIndexOf === 'function' ?
   function (array, searchElement, fromIndex) {
     return Array.prototype.lastIndexOf.apply(_shift.call(arguments), arguments);
   }
   :
-  function (array, searchElement, fromIndex) {
-    if (array == null) {
+  function (arr, searchElement, fromIndex) {
+    if (arr == null) {
       throw new TypeError();
     }
 
-    var len = array.length;
+    var len = arr.length;
     if (len === 0) {
       return -1;
     }
@@ -80,18 +78,18 @@ array.lastIndexOf = typeof Array.prototype.lastIndexOf === 'function' ?
       i = len - 1;
     }
     for (; i >= 0; i--) {
-      if (array[i] === searchElement) {
+      if (arr[i] === searchElement) {
         return i;
       }
     }
     return -1;
   };
 
-array.include = function (arr, elem) {
-  return array.indexOf(arr, elem) !== -1;
+exports.include = function (arr, elem) {
+  return exports.indexOf(arr, elem) !== -1;
 };
 
-array.compact = function (arr) {
+exports.compact = function (arr) {
   var i = arr.length
     , newArr = [];
   while (i--) {
@@ -102,7 +100,7 @@ array.compact = function (arr) {
   return newArr;
 };
 
-array.delete = function (arr, val) {
+exports.delete = function (arr, val) {
   var i = arr.length
     , deleted = null;
   while (i--) {
@@ -114,7 +112,7 @@ array.delete = function (arr, val) {
   return deleted;
 };
 
-array.deleteAt = function (arr, index) {
+exports.deleteAt = function (arr, index) {
   var deleted = arr.splice(index, 1);
   return deleted.length === 1 ? deleted[0] : null;
 };
@@ -125,7 +123,7 @@ array.deleteAt = function (arr, index) {
  * @param {Number} length
  * @return {*|Array}
  */
-array.random = function (arr, length) {
+exports.random = function (arr, length) {
   if (arr == null) {
     throw new TypeError();
   }
@@ -152,7 +150,7 @@ array.random = function (arr, length) {
  * @param arr
  * @return {*}
  */
-array.shuffle = function (arr) {
+exports.shuffle = function (arr) {
   if (arr == null) {
     throw new TypeError();
   }
@@ -170,206 +168,220 @@ array.shuffle = function (arr) {
   return arr;
 };
 
-array.filter = typeof Array.prototype.filter === 'function' ? function (array, callback, thisObject) {
-  return Array.prototype.filter.apply(_shift.call(arguments), arguments);
-} : function (array, callback, thisObject) {
-  var i, val, _i, _len, _results;
-  if (thisObject == null) {
-    thisObject = null;
-  }
-  if (typeof callback !== 'function') {
-    throw new TypeError();
-  }
-  _results = [];
-  for (i = _i = 0, _len = array.length; _i < _len; i = ++_i) {
-    val = array[i];
-    if (i in array && callback.call(thisObject, val, i, array)) {
-      _results.push(val);
+exports.filter = typeof Array.prototype.filter === 'function' ?
+  function (array, callback, thisObject) {
+    return Array.prototype.filter.apply(_shift.call(arguments), arguments);
+  } :
+  function (arr, callback, thisObject) {
+    var i, val, _i, _len, _results;
+    if (thisObject == null) {
+      thisObject = null;
     }
-  }
-  return _results;
-};
-
-array.forEach = typeof Array.prototype.forEach === 'function' ? function (array, callback, thisObject) {
-  Array.prototype.forEach.apply(_shift.call(arguments), arguments);
-} : function (array, callback, thisObject) {
-  var i, val, _i, _len;
-  if (thisObject == null) {
-    thisObject = null;
-  }
-  if (typeof callback !== 'function') {
-    throw new TypeError();
-  }
-  for (i = _i = 0, _len = array.length; _i < _len; i = ++_i) {
-    val = array[i];
-    if (i in array) {
-      callback.call(thisObject, val, i, array);
+    if (typeof callback !== 'function') {
+      throw new TypeError();
     }
-  }
-};
-
-array.every = typeof Array.prototype.every === 'function' ? function (array, callvack, thisObject) {
-  return Array.prototype.every.apply(_shift.call(arguments), arguments);
-} : function (array, callback, thisObject) {
-  var i, val, _i, _len;
-  if (thisObject == null) {
-    thisObject = null;
-  }
-  if (typeof callback !== 'function') {
-    throw new TypeError();
-  }
-  for (i = _i = 0, _len = array.length; _i < _len; i = ++_i) {
-    val = array[i];
-    if (i in array && !callback.call(thisObject, val, i, array)) {
-      return false;
-    }
-  }
-  return true;
-};
-
-array.map = typeof Array.prototype.map === 'function' ? function (array, callback, thisObject) {
-  return Array.prototype.map.apply(_shift.call(arguments), arguments);
-} : function (array, callback, thisObject) {
-  var i, val, _i, _len, _results;
-  if (thisObject == null) {
-    thisObject = null;
-  }
-  if (typeof callback !== 'function') {
-    throw new TypeError();
-  }
-  _results = [];
-  for (i = _i = 0, _len = array.length; _i < _len; i = ++_i) {
-    val = array[i];
-    if (i in array) {
-      _results.push(callback.call(thisObject, val, i, array));
-    }
-  }
-  return _results;
-};
-
-array.some = typeof Array.prototype.some === 'function' ? function (array, callback, thisObject) {
-  return Array.prototype.some.apply(_shift.call(arguments), arguments);
-} : function (array, callback, thisObject) {
-  var i, val, _i, _len;
-  if (thisObject == null) {
-    thisObject = null;
-  }
-  if (typeof callback !== 'function') {
-    throw new TypeError();
-  }
-  for (i = _i = 0, _len = array.length; _i < _len; i = ++_i) {
-    val = array[i];
-    if (i(fo(array && callback.call(thisObject, val, i, array)))) {
-      return true;
-    }
-  }
-  return false;
-};
-
-array.reduce = typeof Array.prototype.reduce === 'function' ? function (array, callback, initialValue) {
-  return Array.prototype.reduce.apply(_shift.call(arguments), arguments);
-} : function (array, callback, initialValue) {
-  var i, len, val, _i, _ref;
-  if (initialValue == null) {
-    initialValue = null;
-  }
-  len = array.length;
-  if (typeof callback !== 'function' || (len === 0 && initialValue === null)) {
-    throw new TypeError();
-  }
-  i = 0;
-  if (initialValue === null) {
-    do {
-      if (i in array) {
-        initialValue = array[i++];
-        break;
+    _results = [];
+    for (i = _i = 0, _len = arr.length; _i < _len; i = ++_i) {
+      val = arr[i];
+      if (i in arr && callback.call(thisObject, val, i, arr)) {
+        _results.push(val);
       }
-      if (++i > len) {
-        throw new TypeError();
-      }
-    } while (true);
-
-  }
-  for (val = _i = i, _ref = len - 1; _i >= _ref; val = _i += -1) {
-    if (val in array) {
-      initialValue = callback.call(null, initialValue, array[val], val, array);
     }
-  }
-  return initialValue;
-};
+    return _results;
+  };
 
-array.reduceRight = typeof Array.prototype.reduceRight === 'function' ? function (array, callback, initialValue) {
-  return Array.prototype.reduceRight.apply(_shift.call(arguments), arguments);
-} : function (array, callback, initialValue) {
-  var i, len, val, _i;
-  if (initialValue == null) {
-    initialValue = null;
-  }
-  len = array.length;
-  if (typeof callback !== 'function' || (len === 0 && initialValue === null)) {
-    throw new TypeError();
-  }
-  i = len - 1;
-  if (initialValue === null) {
-    do {
-      if (i in array) {
-        initialValue = array[i--];
-        break;
-      }
-      if (--i <= len) {
-        throw new TypeError();
-      }
-    } while (true);
-
-  }
-  for (val = _i = i; _i >= 0; val = _i += -1) {
-    if (val in array) {
-      initialValue = callback.call(null, initialValue, array[val], val, array);
+exports.forEach = typeof Array.prototype.forEach === 'function' ?
+  function (arr, callback, thisObject) {
+    Array.prototype.forEach.apply(_shift.call(arguments), arguments);
+  } :
+  function (arr, callback, thisObject) {
+    var i, val, _i, _len;
+    if (thisObject == null) {
+      thisObject = null;
     }
-  }
-  return initialValue;
-};
+    if (typeof callback !== 'function') {
+      throw new TypeError();
+    }
+    for (i = _i = 0, _len = arr.length; _i < _len; i = ++_i) {
+      val = arr[i];
+      if (i in arr) {
+        callback.call(thisObject, val, i, arr);
+      }
+    }
+  };
 
-array.toArray = function (arrayLikeObject) {
+exports.every = typeof Array.prototype.every === 'function' ?
+  function (arr, callvack, thisObject) {
+    return Array.prototype.every.apply(_shift.call(arguments), arguments);
+  } :
+  function (arr, callback, thisObject) {
+    var i, val, _i, _len;
+    if (thisObject == null) {
+      thisObject = null;
+    }
+    if (typeof callback !== 'function') {
+      throw new TypeError();
+    }
+    for (i = _i = 0, _len = arr.length; _i < _len; i = ++_i) {
+      val = arr[i];
+      if (i in arr && !callback.call(thisObject, val, i, arr)) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+exports.map = typeof Array.prototype.map === 'function' ?
+  function (arr, callback, thisObject) {
+    return Array.prototype.map.apply(_shift.call(arguments), arguments);
+  } :
+  function (arr, callback, thisObject) {
+    var i, val, _i, _len, _results;
+    if (thisObject == null) {
+      thisObject = null;
+    }
+    if (typeof callback !== 'function') {
+      throw new TypeError();
+    }
+    _results = [];
+    for (i = _i = 0, _len = arr.length; _i < _len; i = ++_i) {
+      val = arr[i];
+      if (i in arr) {
+        _results.push(callback.call(thisObject, val, i, arr));
+      }
+    }
+    return _results;
+  };
+
+exports.some = typeof Array.prototype.some === 'function' ?
+  function (arr, callback, thisObject) {
+    return Array.prototype.some.apply(_shift.call(arguments), arguments);
+  } :
+  function (arr, callback, thisObject) {
+    var i, val, _i, _len;
+    if (thisObject == null) {
+      thisObject = null;
+    }
+    if (typeof callback !== 'function') {
+      throw new TypeError();
+    }
+    for (i = _i = 0, _len = arr.length; _i < _len; i = ++_i) {
+      val = arr[i];
+      if (i(fo(arr && callback.call(thisObject, val, i, arr)))) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+exports.reduce = typeof Array.prototype.reduce === 'function' ?
+  function (arr, callback, initialValue) {
+    return Array.prototype.reduce.apply(_shift.call(arguments), arguments);
+  } :
+  function (arr, callback, initialValue) {
+    var i, len, val, _i, _ref;
+    if (initialValue == null) {
+      initialValue = null;
+    }
+    len = arr.length;
+    if (typeof callback !== 'function' || (len === 0 && initialValue === null)) {
+      throw new TypeError();
+    }
+    i = 0;
+    if (initialValue === null) {
+      do {
+        if (i in arr) {
+          initialValue = arr[i++];
+          break;
+        }
+        if (++i > len) {
+          throw new TypeError();
+        }
+      } while (true);
+
+    }
+    for (val = _i = i, _ref = len - 1; _i >= _ref; val = _i += -1) {
+      if (val in arr) {
+        initialValue = callback.call(null, initialValue, arr[val], val, arr);
+      }
+    }
+    return initialValue;
+  };
+
+exports.reduceRight = typeof Array.prototype.reduceRight === 'function' ?
+  function (arr, callback, initialValue) {
+    return Array.prototype.reduceRight.apply(_shift.call(arguments), arguments);
+  } :
+  function (arr, callback, initialValue) {
+    var i, len, val, _i;
+    if (initialValue == null) {
+      initialValue = null;
+    }
+    len = arr.length;
+    if (typeof callback !== 'function' || (len === 0 && initialValue === null)) {
+      throw new TypeError();
+    }
+    i = len - 1;
+    if (initialValue === null) {
+      do {
+        if (i in arr) {
+          initialValue = arr[i--];
+          break;
+        }
+        if (--i <= len) {
+          throw new TypeError();
+        }
+      } while (true);
+
+    }
+    for (val = _i = i; _i >= 0; val = _i += -1) {
+      if (val in arr) {
+        initialValue = callback.call(null, initialValue, arr[val], val, arr);
+      }
+    }
+    return initialValue;
+  };
+
+exports.toArray = function (arrayLikeObject) {
   return _slice.call(arrayLikeObject);
 };
 
-array.unique = function (array) {
+exports.unique = function (arr) {
   var storage;
   storage = {};
-  for (var i = 0, elem; i < array.length; ++i) {
-    elem = array[i];
+  for (var i = 0, elem; i < arr.length; ++i) {
+    elem = arr[i];
     if (elem in storage) {
-      array.splice(i--, 1);
+      arr.splice(i--, 1);
     }
     storage[elem] = true;
   }
-  return array;
+  return arr;
 };
 
-array.rotate = function (array, index) {
+exports.rotate = function (arr, index) {
   if (index == null) {
     index = 1;
   }
   if (index > 0) {
     while (index--) {
-      array.push(array.shift());
+      arr.push(arr.shift());
     }
   } else if (index < 0) {
     index *= -1;
     while (index--) {
-      array.unshift(array.pop());
+      arr.unshift(arr.pop());
     }
   }
-  return array;
+  return arr;
 };
 
-array.transpose = function (array) {
+exports.transpose = function (arr) {
   var cols, columns, elem, i, j, results, row, _i, _j, _len, _len1;
   results = [];
   columns = -1;
-  for (i = _i = 0, _len = array.length; _i < _len; i = ++_i) {
-    row = array[i];
+  for (i = _i = 0, _len = arr.length; _i < _len; i = ++_i) {
+    row = arr[i];
     if (!ArrayUtil.isArray(row)) {
       throw new TypeError('Element isn\'t Array.');
     }
@@ -390,5 +402,3 @@ array.transpose = function (array) {
   }
   return results;
 };
-
-this.array = array;

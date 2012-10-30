@@ -47,4 +47,4 @@ Event.prototype.preventDefault = function () {
   this._isDefaultPrevented = true;
 };
 
-this.Event = Event;
+module.exports = Event;

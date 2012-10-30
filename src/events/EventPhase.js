@@ -4,4 +4,4 @@ var EventPhase = {
   BUBBLING_PHASE : 3
 };
 
-this.EventPhase = EventPhase;
+module.exports = EventPhase;

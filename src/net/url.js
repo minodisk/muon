@@ -1,10 +1,9 @@
-var querystring = this.require('muon.serializer.querystring')
-  , array = this.require('muon.utils.array');
+var querystring = require('muon.serializer.querystring')
+  , array = require('muon.utils.array');
 
-var url = {}
-  , R_URL = /^((\w+:)(\/*)?(?:([^@]*)@)?(([^\/]+?)(?::(\d*))?))((\/[^\?#]*)?(\?([^#]*)?)?)?(#.*)?$/;
+var R_URL = /^((\w+:)(\/*)?(?:([^@]*)@)?(([^\/]+?)(?::(\d*))?))((\/[^\?#]*)?(\?([^#]*)?)?)?(#.*)?$/;
 
-url.parse = function (urlStr, parseQueryString) {
+exports.parse = function (urlStr, parseQueryString) {
   if (parseQueryString == null) {
     parseQueryString = false;
   }
@@ -23,7 +22,7 @@ url.parse = function (urlStr, parseQueryString) {
     , search = matched[10]
     , query = matched[11]
     , hash = matched[12]
-    , obj, opt, key;
+    , obj, opt, key, val;
   
   obj = {
     href    : href,
@@ -52,15 +51,15 @@ url.parse = function (urlStr, parseQueryString) {
     }
   }
   for (key in opt) {
-    value = opt[key];
-    if (value) {
-      obj[key] = value;
+    val = opt[key];
+    if (val) {
+      obj[key] = val;
     }
   }
   return obj;
 };
 
-url.format = function (urlObj) {
+exports.format = function (urlObj) {
   var protocol = urlObj.protocol
     , protocolPostfix = __indexOf.call(URL.CSS, protocol) >= 0 ? '://' : ':'
     , auth = urlObj.auth
@@ -97,7 +96,5 @@ url.format = function (urlObj) {
   return protocol + protocolPostfix + host + pathname + search + hash;
 };
 
-url.resolve = function (from, to) {
+exports.resolve = function (from, to) {
 };
-
-this.url = url;

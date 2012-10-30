@@ -1,5 +1,5 @@
-//import muon.events.Event;
-//import muon.events.EventPhase;
+var Event = require('muon.events.Event')
+  , EventPhase = require('muon.events.EventPhase');
 
 function EventEmitter() {
   this._events = {};
@@ -7,10 +7,10 @@ function EventEmitter() {
 
 EventEmitter.prototype.on = function (type, listener, useCapture, priority) {
   if (typeof type !== "string") {
-    throw new TypeError("EventEmitter#addEventListener: type isn't string");
+    throw new ErrorMessage("EventEmitter#addEventListener: type isn't string");
   }
   if (typeof listener !== "function") {
-    throw new TypeError("EventEmitter#addEventListener: listener isn't function");
+    throw new ErrorMessage("EventEmitter#addEventListener: listener isn't function");
   }
   if (useCapture == null) {
     useCapture = false;
@@ -54,7 +54,7 @@ EventEmitter.prototype.off = function (type, listener) {
 EventEmitter.prototype.emit = function (event) {
   var obj, objs, i, len;
   if (!(event instanceof Event)) {
-    throw new TypeError("EventEmitter#dispatchEvent: event isn't Event");
+    throw new ErrorMessage("EventEmitter#dispatchEvent: event isn't Event");
   }
 
   event.currentTarget = this;
@@ -76,4 +76,4 @@ EventEmitter.prototype.emit = function (event) {
   return !event._isDefaultPrevented;
 };
 
-this.EventEmitter = EventEmitter;
+module.exports = EventEmitter;

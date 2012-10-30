@@ -1,7 +1,6 @@
-var querystring = {}
-  , encode = encodeURIComponent;
+var encode = encodeURIComponent;
 
-querystring.stringify = function (obj) {
+exports.stringify = function (obj) {
   var key
     , tokens = [];
   for (key in obj) {
@@ -10,7 +9,7 @@ querystring.stringify = function (obj) {
   return tokens.join("&");
 };
 
-querystring.parse = function (str) {
+exports.parse = function (str) {
   if (str == null) {
     return {};
   }
@@ -20,7 +19,7 @@ querystring.parse = function (str) {
     , len = tokens.length
     , kv;
   if (len === 0) {
-    throw new TypeError();
+    throw new ErrorMessage();
   }
   for (; i < len; i++) {
     kv = tokens[i].split('=');
@@ -28,5 +27,3 @@ querystring.parse = function (str) {
   }
   return obj;
 };
-
-this.querystring = querystring;
