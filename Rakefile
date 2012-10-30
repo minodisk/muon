@@ -12,37 +12,92 @@ VERSION = '0.1.1'
 INPUT = 'src'
 OUTPUT = 'lib'
 TEST = 'test'
-COPYRIGHT = <<-EOS
+
+def copyright(version)
+  <<-EOS
 /**
  * @fileOverview
  * @name muon.js
  * @author Daisuke Mino daisuke.mino@gmail.com
  * @url https://github.com/minodisk/muon
- * @version #{VERSION}
+ * @version #{version}
  * @license MIT License
  */
 EOS
-PREFIX = <<-EOS
+end
+
+def prefix(package_object)
+  <<-EOS
 ;(function () {
   'use strict';
 
+  var __declarations = #{package_object}
+    , __modules = #{package_object}
+    , require = function (namespace) {
+      var namespaces = namespace.split('.')
+        , i, len, module, declaration;
+  
+      module = __modules;
+      for (i = 0, len = namespaces.length; i < len; i++) {
+        module = module[namespaces[i]];
+        if (module == null) {
+          break;
+        }
+      }
+      if (module != null) {
+        return module;
+      }
+  
+      declaration = __declarations;
+      module = __modules;
+      for (i = 0, len = namespaces.length; i < len; i++) {
+        declaration = declaration[namespaces[i]];
+        if (i < len - 1) {
+          if (module[namespaces[i]] == null) {
+            module[namespaces[i]] = {};
+          }
+          module = module[namespaces[i]];
+        }
+      }
+      if (declaration == null) {
+        throw new Error("Cannot find module '" + namespace + "'");
+      }
+      if (module.exports == null) {
+        module.exports = {};
+      }
+      declaration.call(module.exports, module, module.exports);
+  
+      return module.exports;
+    };
+
 EOS
-POSTFIX = <<-EOS
-  var tmp = this.#{PACKAGE_NAME};
-  #{PACKAGE_NAME}.conflict = function () {
-    return tmp;
-  };
-  this.#{PACKAGE_NAME} = #{PACKAGE_NAME};
+end
+
+def postfix
+  <<-EOS
+  this.require = require;
 
 }).call(this);
 EOS
+end
 
 
 filename = nil
 
 task :default => [:compile, :minimize, :test]
 
+desc "Continuation watching build"
+task :watch do
+  at_exit {
+    loop do
+      system('rake', '--silent')
+      sleep 5
+    end
+  }
+end
+
 task :compile do
+  p 'compile...'
   files = search()
   code = compile(files)
   filename = "#{OUTPUT}/#{PACKAGE_NAME}.js"
@@ -50,9 +105,9 @@ task :compile do
 end
 
 task :minimize do
-  codeMin = minimize filename
-  filenameMin = "#{OUTPUT}/#{PACKAGE_NAME}.min.js"
-  write filenameMin, codeMin
+  code_min = minimize filename
+  filename_min = "#{OUTPUT}/#{PACKAGE_NAME}.min.js"
+  write filename_min, code_min
 end
 
 task :test do
@@ -79,11 +134,11 @@ def search
       packages = File.dirname(path).split('/')
       packages.shift()
 
-      className = File.basename(path, File.extname(path))
+      class_name = File.basename(path, File.extname(path))
 
       files.push(
         'packages' => packages,
-        'className' => className,
+        'class_name' => class_name,
         'code' => code
       )
     end
@@ -92,100 +147,43 @@ def search
 end
 
 def compile(files)
-  declarations = ["#{PACKAGE_NAME} = {}"]
-  packagesList = []
+  packages_list = []
   files.each do |file|
-    unless packagesList.include?(file['packages'])
-      packagesList.push(file['packages'])
+    unless packages_list.include?(file['packages'])
+      packages_list.push(file['packages'])
     end
   end
   object = {}
-  packagesList.each do |packages|
+  packages_list.each do |packages|
     obj = object
     packages.each do |package|
       obj[package] = obj = {}
     end
   end
-  declaration = <<-EOS
-  var #{PACKAGE_NAME} = #{JSON.generate(object)};
-
-EOS
+  package_object = JSON.generate(object)
 
   implement = ''
   files.each do |file|
-    className = file['className']
+    class_name = file['class_name']
     packages = file['packages']
-    code = file['code']
-
-    requires = code.scan(/\/\/\s*import\s+([\w\.]+)/).flatten()
-    file['package'] = "#{PACKAGE_NAME}.#{packages.join('.')}"
-    file['fullName'] = "#{file['package']}.#{className}"
-    file['requires'] = requires
-  end
-
-  files.sort! do |a, b|
-    aDepB = a['requires'].include?(b['fullName'])
-    bDepA = b['requires'].include?(a['fullName'])
-    if aDepB and bDepA
-      raise 'circular dependencies'
-    end
-
-    if aDepB
-      1
-    elsif bDepA
-      -1
-    else
-      0
-    end
-  end
-
-  files.each do |file|
-    indentedCode = ''
+    file['package'] = packages.join('.')
+    file['full_name'] = "#{file['package']}.#{class_name}"
+    indented_lines = []
     lines = file['code'].split("\n")
     lines.each do |line|
-      indentedCode += <<-EOS
-    #{line}
-EOS
+      indented_lines.push "    #{line}"
     end
-
-    fullName = file['fullName'];
-    requires = file['requires'];
-    puts "#{fullName} <- #{requires}"
-    names = []
-    requires.each do |import|
-      names.push(import.split('.').pop())
-    end
-    arguments = [file['package']].concat(requires)
+    code = indented_lines.join("\n")
     implement += <<-EOS
-  (function (#{names.join(', ')}) {
-#{indentedCode}
-  }).call(#{arguments.join(', ')});
+  __declarations.#{file['full_name']} = function (module, exports) {
+#{code}
+  };
 
 EOS
   end
 
-  COPYRIGHT + PREFIX + declaration + implement + POSTFIX
+  copyright(VERSION) + prefix(package_object) + implement + postfix()
 end
-
-#def getVersion
-#  begin
-#    IO.popen('git tag') do |io|
-#      tags = []
-#      while (tag = io.gets)
-#        tags.push(tag)
-#      end
-#      if tags.empty?
-#        nil
-#      else
-#        tag = tags.pop()
-#        versions = tag.scan(/([\d\.]+)/).flatten()
-#        versions.shift()
-#      end
-#    end
-#  rescue
-#    nil
-#  end
-#end
 
 def minimize(filename)
   begin
