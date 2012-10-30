@@ -5,9 +5,9 @@ exports.events.EventDispatcher = class EventDispatcher
 
   addEventListener: (type, listener, useCapture = false, priority = 0)->
     if typeof type isnt 'string'
-      throw new TypeError "EventDispatcher#addEventListener: type isn't string"
+      throw new ErrorMessage "EventDispatcher#addEventListener: type isn't string"
     if typeof listener isnt 'function'
-      throw new TypeError "EventDispatcher#addEventListener: listener isn't function"
+      throw new ErrorMessage "EventDispatcher#addEventListener: listener isn't function"
 
     unless @_events[type]?
       @_events[type] = []
@@ -35,7 +35,7 @@ exports.events.EventDispatcher = class EventDispatcher
 
   dispatchEvent: (event)->
     unless event instanceof Event
-      throw new TypeError "EventDispatcher#dispatchEvent: event isn't Event"
+      throw new ErrorMessage "EventDispatcher#dispatchEvent: event isn't Event"
 
     event.currentTarget = @
     if (objs = @_events[event.type])?

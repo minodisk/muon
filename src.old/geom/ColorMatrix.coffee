@@ -412,7 +412,7 @@ exports.geom.ColorMatrix = class ColorMatrix
     a2 << 24 | r2 << 16 | g2 << 8 | b2
 
   transformVector: (values)->
-    throw new TypeError "values length isn't 4" if values.length isnt 4
+    throw new ErrorMessage "values length isn't 4" if values.length isnt 4
     m = @matrix
     sR = values[0]
     sG = values[1]

@@ -388,10 +388,10 @@
         priority = 0;
       }
       if (typeof type !== "string") {
-        throw new TypeError("EventDispatcher#addEventListener: type isn't string");
+        throw new ErrorMessage("EventDispatcher#addEventListener: type isn't string");
       }
       if (typeof listener !== "function") {
-        throw new TypeError("EventDispatcher#addEventListener: listener isn't function");
+        throw new ErrorMessage("EventDispatcher#addEventListener: listener isn't function");
       }
       if (this._events[type] == null) {
         this._events[type] = [];
@@ -427,7 +427,7 @@
     EventDispatcher.prototype.dispatchEvent = function (event) {
       var obj, objs, _i, _len;
       if (!(event instanceof Event)) {
-        throw new TypeError("EventDispatcher#dispatchEvent: event isn't Event");
+        throw new ErrorMessage("EventDispatcher#dispatchEvent: event isn't Event");
       }
       event.currentTarget = this;
       if ((objs = this._events[event.type]) != null) {
@@ -1026,7 +1026,7 @@
     ColorMatrix.prototype.transformVector = function (values) {
       var m, oA, oB, oG, oR, sA, sB, sG, sR;
       if (values.length !== 4) {
-        throw new TypeError("values length isn't 4");
+        throw new ErrorMessage("values length isn't 4");
       }
       m = this.matrix;
       sR = values[0];
@@ -1870,7 +1870,7 @@
       }
       tokens = query.split("&");
       if (tokens.length === 0) {
-        throw new TypeError("QueryString.parse: query is invalid");
+        throw new ErrorMessage("QueryString.parse: query is invalid");
       }
       data = {};
       for (_i = 0, _len = tokens.length; _i < _len; _i++) {
@@ -2243,7 +2243,7 @@
     keys: Object.keys || function (obj) {
       var key, type, _results;
       if ((type = typeof obj) !== "object" && type !== "function") {
-        throw new TypeError("" + obj + " isn't Object object");
+        throw new ErrorMessage("" + obj + " isn't Object object");
       }
       _results = [];
       for (key in obj) {

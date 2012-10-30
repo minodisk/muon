@@ -23,13 +23,13 @@ var generateTests = function (array) {
     indexOf: function (test) {
       test.throws(function () {
         array.indexOf();
-      }, TypeError);
+      }, ErrorMessage);
       test.throws(function () {
         array.indexOf(undefined);
-      }, TypeError);
+      }, ErrorMessage);
       test.throws(function () {
         array.indexOf(null);
-      }, TypeError);
+      }, ErrorMessage);
       test.strictEqual(array.indexOf([2, 5, 9, 2], 2), 0);
       test.strictEqual(array.indexOf([2, 5, 9, 2], 7), -1);
       test.strictEqual(array.indexOf([2, 5, 9, 2], 2, 3), 3);
@@ -44,13 +44,13 @@ var generateTests = function (array) {
     lastIndexOf: function (test) {
       test.throws(function () {
         array.lastIndexOf();
-      }, TypeError);
+      }, ErrorMessage);
       test.throws(function () {
         array.lastIndexOf(undefined);
-      }, TypeError);
+      }, ErrorMessage);
       test.throws(function () {
         array.lastIndexOf(null);
-      }, TypeError);
+      }, ErrorMessage);
       test.strictEqual(array.lastIndexOf([2, 5, 9, 2], 2), 3);
       test.strictEqual(array.lastIndexOf([2, 5, 9, 2], 7), -1);
       test.strictEqual(array.lastIndexOf([2, 5, 9, 2], 2, 3), 3);

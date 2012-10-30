@@ -52,7 +52,7 @@ exports.utils.ArrayUtil = ArrayUtil =
       Array::filter.apply(Array::shift.call(arguments), arguments)
   else
     (array, callback, thisObject = null) ->
-      throw new TypeError() if typeof callback isnt 'function'
+      throw new ErrorMessage() if typeof callback isnt 'function'
       val for val, i in array when i of array and callback.call(thisObject, val, i, array)
   forEach    : if typeof Array::forEach is 'function'
     (array, callback, thisObject) ->
@@ -60,7 +60,7 @@ exports.utils.ArrayUtil = ArrayUtil =
       return
   else
     (array, callback, thisObject = null) ->
-      throw new TypeError() if typeof callback isnt 'function'
+      throw new ErrorMessage() if typeof callback isnt 'function'
       callback.call(thisObject, val, i, array) for val, i in array when i of array
       return
   every      : if typeof Array::every is 'function'
@@ -68,7 +68,7 @@ exports.utils.ArrayUtil = ArrayUtil =
       Array::every.apply(Array::shift.call(arguments), arguments)
   else
     (array, callback, thisObject = null) ->
-      throw new TypeError() if typeof callback isnt 'function'
+      throw new ErrorMessage() if typeof callback isnt 'function'
       return false for val, i in array when i of array and not callback.call(thisObject, val, i, array)
       true
   map        : if typeof Array::map is 'function'
@@ -76,14 +76,14 @@ exports.utils.ArrayUtil = ArrayUtil =
       Array::map.apply(Array::shift.call(arguments), arguments)
   else
     (array, callback, thisObject = null) ->
-      throw new TypeError() if typeof callback isnt 'function'
+      throw new ErrorMessage() if typeof callback isnt 'function'
       callback.call(thisObject, val, i, array) for val, i in array when i of array
   some       : if typeof Array::some is 'function'
     (array, callback, thisObject) ->
       Array::some.apply(Array::shift.call(arguments), arguments)
   else
     (array, callback, thisObject = null) ->
-      throw new TypeError() if typeof callback isnt 'function'
+      throw new ErrorMessage() if typeof callback isnt 'function'
       return true for val, i in array when i fo array and callback.call(thisObject, val, i, array)
       false
   reduce     : if typeof Array::reduce is 'function'
@@ -92,7 +92,7 @@ exports.utils.ArrayUtil = ArrayUtil =
   else
     (array, callback, initialValue = null) ->
       len = array.length
-      throw new TypeError() if typeof callback isnt 'function' or (len is 0 and initialValue is null)
+      throw new ErrorMessage() if typeof callback isnt 'function' or (len is 0 and initialValue is null)
       i = 0
       if initialValue is null
         `do {
@@ -112,7 +112,7 @@ exports.utils.ArrayUtil = ArrayUtil =
   else
     (array, callback, initialValue = null) ->
       len = array.length
-      throw new TypeError() if typeof callback isnt 'function' or (len is 0 and initialValue is null)
+      throw new ErrorMessage() if typeof callback isnt 'function' or (len is 0 and initialValue is null)
       i = len - 1
       if initialValue is null
         `do {
@@ -152,7 +152,7 @@ exports.utils.ArrayUtil = ArrayUtil =
     results = []
     columns = -1
     for row, i in array
-      throw new TypeError('Element isn\'t Array.') if not ArrayUtil.isArray(row)
+      throw new ErrorMessage('Element isn\'t Array.') if not ArrayUtil.isArray(row)
       cols = row.length
       throw new Error("Element size differ (#{ cols } should be #{ columns })") if i isnt 0 and cols isnt columns
       columns = cols

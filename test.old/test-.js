@@ -1,7 +1,8 @@
-var topLevel = require('../src/.js')
-  , extend = topLevel.extend
-  , mix = topLevel.mix
-  , bind = topLevel.bind;
+var req = require('../lib/muon').require
+  , module = req('module')
+  , extend = module.extend
+  , mix = module.mix
+  , bind = module.bind;
 
 this['extend'] = {
 

@@ -11,7 +11,7 @@ exports.serializer.QueryString = QueryString =
       return {}
     tokens = query.split '&'
     if tokens.length is 0
-      throw new TypeError "QueryString.parse: query is invalid"
+      throw new ErrorMessage "QueryString.parse: query is invalid"
     data = {}
     for token in tokens
       nv = token.split '='
