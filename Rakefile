@@ -118,7 +118,8 @@ EOS
     code = file['code']
 
     requires = code.scan(/\/\/\s*import\s+([\w\.]+)/).flatten()
-    file['fullName'] = "#{PACKAGE_NAME}.#{packages.join('.')}.#{className}"
+    file['package'] = "#{PACKAGE_NAME}.#{packages.join('.')}"
+    file['fullName'] = "#{file['package']}.#{className}"
     file['requires'] = requires
   end
 
@@ -154,7 +155,7 @@ EOS
     requires.each do |import|
       names.push(import.split('.').pop())
     end
-    arguments = ['this'].concat(requires)
+    arguments = [file['package']].concat(requires)
     implement += <<-EOS
   (function (#{names.join(', ')}) {
 #{indentedCode}
