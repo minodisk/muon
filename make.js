@@ -4,14 +4,19 @@
   var fs = require('fs')
     , path = require('path')
     , spawn = require('child_process').spawn
-    , uglify = require('uglify-js2')
     , util = require('util')
+    , uglify = require('uglify-js2')
+    , dox = require('dox')
+    , jade = require('jade')
 
     , PACKAGE_NAME = 'muon'
     , VERSION = '0.1.2'
     , INPUT = 'src'
     , OUTPUT = 'lib'
-    , TEST = 'test';
+    , TEST = 'test'
+    , DOC = 'docs'
+    , TEMPLATE = 'docs-template'
+    , API = 'api';
 
 
   function find(originalDir, dir, files) {
@@ -24,7 +29,7 @@
     fs.readdirSync(dir).forEach(function (name) {
       var filename = path.join(dir, name)
         , stats = fs.statSync(filename)
-        , extname, code, tmp, packageName, className, namespace;
+        , extname, code, tmp, packageName, className, topLevel, names, file;
       if (stats.isFile()) {
         extname = path.extname(filename);
         if (extname === '') {
@@ -44,39 +49,58 @@
         tmp = path.relative(originalDir, filename);
         packageName = path.dirname(tmp);
         className = path.basename(tmp, path.extname(tmp));
-        if (className.charAt(0) === '.') {
-          namespace = null;
+        topLevel = className.charAt(0) === '_';
+        if (packageName === '.') {
+          names = [className];
         } else {
-          namespace = packageName.split('/');
-          namespace.push(className);
+          names = packageName.split('/');
+          names.push(className);
         }
 
-        files.push({
-          namespace: namespace,
-          code     : code
-        });
+
+        file = {
+          namespace: names.join('.'),
+          code     : code,
+          topLevel : topLevel
+        };
+        files.push(file);
 
       } else if (stats.isDirectory()) {
         find(originalDir, filename, files);
       }
     });
+
+    files.sort(function (a, b) {
+      if ((a.topLevel && b.topLevel) || (!a.topLevel && !b.topLevel)) {
+        if ([a.namespace, b.namespace].sort().indexOf(a.namespace) === 0) {
+          return -1;
+        } else {
+          return 1;
+        }
+      } else if (a.topLevel) {
+        return -1;
+      } else if (b.topLevel) {
+        return 1;
+      }
+    });
+
     return files;
   }
 
-  function createPackageObjectString(files) {
-    var object = {};
-    files.forEach(function (file) {
-      var namespace = file.namespace
-        , obj = object;
-      namespace.forEach(function (ns) {
-        if (obj[ns] == null) {
-          obj[ns] = {};
-        }
-        obj = obj[ns];
-      });
-    });
-    return JSON.stringify(object);
-  }
+  /*  function createPackageObjectString(files) {
+   var object = {};
+   files.forEach(function (file) {
+   var namespace = file.namespace
+   , obj = object;
+   namespace.forEach(function (ns) {
+   if (obj[ns] == null) {
+   obj[ns] = {};
+   }
+   obj = obj[ns];
+   });
+   });
+   return JSON.stringify(object);
+   }*/
 
   function copyright(version) {
     return [
@@ -95,7 +119,8 @@
   function prefix() {
     return [
       ";(function () {",
-      "'use strict';",
+      "  'use strict';",
+      "",
       ""
     ].join('\n');
   }
@@ -104,13 +129,14 @@
     var blocks = [];
     files.forEach(function (file, i) {
       var lines = []
-        , code;
-      file.code.split('\n').forEach(function (line, j) {
-        lines[j] = '    ' + line;
-      });
+        , indent, code;
 
+      indent = file.topLevel ? '  ' : '    ';
+      file.code.split('\n').forEach(function (line, j) {
+        lines[j] = indent + line;
+      });
       code = lines.join('\n');
-      blocks[i] = file.namespace == null ? file.code : "  define('" + file.namespace.join('.') + "', function (module, exports) {\n" +
+      blocks[i] = file.topLevel ? code + '\n' : "  define('" + file.namespace + "', function (require, module, exports) {\n" +
         code + '\n' +
         '  });\n';
     });
@@ -119,7 +145,7 @@
 
   function postfix() {
     return [
-      "  this.require = Module.prototype.require;",
+      "  this.require = Module.require;",
       "",
       "}).call(this);",
       ""
@@ -155,13 +181,88 @@
     });
   }
 
-  (function () {
-    var code = compile(find(INPUT))
+  function docCode(dir, filename) {
+    var docco = spawn('docco', ['-o', dir, filename]);
+    docco.stdout.on('data', function (data) {
+      util.print(data);
+    });
+    docco.stderr.on('data', function (data) {
+      util.print(data);
+    });
+    docco.on('exit', function (code) {
+    });
+  }
+
+  function docAPI(files, template, output) {
+    var modules = [];
+    files.forEach(function (file) {
+      var comments = dox.parseComments(file.code);
+      file.comments = comments;
+
+      console.log(file.namespace, '===========================================');
+
+      var functions = [];
+      comments.forEach(function (comment) {
+        if (comment.ctx) {
+          if (comment.ctx.type === 'function') {
+            functions.push(comment.ctx.name);
+          }
+        }
+      });
+      comments.forEach(function (comment) {
+        if (comment.ctx) {
+          console.log(comment.ctx.string, '---------------------------------------');
+          //          console.log('ctx:', comment.ctx.type);
+          //          console.log('ctx:', comment.ctx);
+          //          console.log('description:', comment.description.full);
+          //          comment.tags.forEach(function (tag) {
+          //            console.log('tag:', tag);
+          //          });
+        }
+      });
+    });
+
+    var gen = jade.compile(fs.readFileSync(template), {
+      compileDebug: true,
+      pretty      : true
+    });
+    fs.writeFileSync(output, gen({
+      files: files
+    }), 'utf-8');
+
+    util.print('jade: ', template, ' -> ', output);
+  }
+
+  function run() {
+    var files = find(INPUT)
+      , code = compile(files)
       , minified = copyright(VERSION) + minify(code);
 
     write(code);
     write(minified, '.min');
     test(TEST);
+    docCode(DOC, OUTPUT + '/' + PACKAGE_NAME + '.js');
+    docAPI(files, TEMPLATE + '/' + API + '.jade', DOC + '/' + API + '.html');
+  }
+
+  var requestRun = (function () {
+    var timeoutId;
+    return function () {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(run, 1000);
+    };
+  })();
+
+  function watch() {
+    Array.prototype.slice.call(arguments).forEach(function (dir) {
+      var watcher = fs.watch(dir);
+      watcher.on('change', requestRun);
+    });
+  }
+
+  (function () {
+    requestRun();
+    watch(INPUT, OUTPUT, TEST, TEMPLATE);
   })();
 
 })();

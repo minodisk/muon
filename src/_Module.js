@@ -25,10 +25,34 @@ var Module = (function () {
       }
       , __modules = {};
 
+    /**
+     * Define module.
+     * @param {String} id Module ID.
+     * @param {Function|Object} definition Module definition.
+     */
     Module.define = function (id, definition) {
       new Module(id, definition);
     };
 
+    /**
+     * Require module.
+     * @param {String} id Module ID.
+     * @return {Object} Module.
+     */
+    Module.require = function (id) {
+      var module = __modules[id];
+      if (module == null) {
+        throw new Error("Cannot find module '" + id + "'");
+      }
+      return module._require();
+    };
+
+    /**
+     * Store named definition.
+     * @param {String} id Module ID.
+     * @param {Function|Object} definition Module definition.
+     * @constructor
+     */
     function Module(id, definition) {
       if (__modules[id] != null) {
         throw new Error("Cannot overwrite module '" + id + "'");
@@ -39,30 +63,21 @@ var Module = (function () {
       this.definition = definition;
     }
 
-    Module.prototype.require = function (id) {
-      var module = __modules[id];
-      if (module == null) {
-        throw new Error("Cannot find module '" + id + "'");
-      }
-      return module._require();
-    };
-
     Module.prototype._require = function () {
       if (this.exports != null) {
         return this.exports;
       }
       this.exports = {};
-      this.definition.call(this.exports, this, this.exports);
+      this.definition.call(this.exports, Module.require, this, this.exports);
       return this.exports;
     };
 
     /**
      * Extends classical prototype pattern object or modern module pattern object.
-     * You can reference parental prototype with this code `Child.__super__`,
-     * when extends prototype pattern.
-     * @params {Function|Object} parent   source object of inheritance.
-     * @params {Function|Object} child    destination object of inheritance. default {}
-     * @returns {Function|Object}         child object
+     * `Child.__super__` provides parent prototype.
+     * @param {Function|Object} parent source object.
+     * @param {Function|Object} child destination object.
+     * @return {Function|Object} child object.
      */
     Module.prototype.extend = function (parent, child) {
       if (child == null) {
@@ -73,6 +88,10 @@ var Module = (function () {
       return child;
     };
 
+    /**
+     * Mix properties.
+     * @return {Object} Mixed object.
+     */
     Module.prototype.mix = function () {
       var i , len , arg
         , child = {};
@@ -83,6 +102,12 @@ var Module = (function () {
       return child;
     };
 
+    /**
+     * Bind context with inspected object.
+     * @param {Function} fn   Binding function.
+     * @param {Object} me     Context object.
+     * @return {Function}
+     */
     Module.prototype.bind = function (fn, me) {
       return function () {
         return fn.apply(me, Array.prototype.slice.call(arguments));

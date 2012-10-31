@@ -1,0 +1,57 @@
+!!!
+html
+
+head
+  title muon.js
+  meta(charset='utf-8')
+  link(rel='stylesheet', href='api.css')
+
+body
+
+  aside
+    for file in files
+      - var moduleName = file.namespace ? file.namespace : '-';
+      h2= moduleName
+      ul
+        for comment in file.comments
+          - var name = comment.ctx? comment.ctx.name : '-';
+          li
+            a(href='#' + moduleName + '.' + name)= name
+
+  .content
+    h1 muon.js
+    dl
+      for file in files
+        - var moduleName = file.namespace ? file.namespace : '-';
+        dt= moduleName
+        dd
+          ul
+            - var functions = [];
+            for comment in file.comments
+              if comment.ctx
+                if comment.ctx.type === 'function'
+                  - functions.push(comment.ctx.name)
+            for comment in file.comments
+              if comment.ctx
+                - var ctx = comment.ctx;
+                if ctx.type === 'method'
+                  dl(id=moduleName + '.' + ctx.name)
+                    dt= ctx.name
+                    if comment.description
+                      - var description = comment.description
+                      dd!= description.full
+                    if comment.tags
+                      for tag in comment.tags
+                        if tag.type === 'param'
+                          ul
+                            li
+                              code
+                                span.param= tag.name
+                                span :
+                                span.types= tag.types.join('|')
+                        else if tag.type === 'return'
+                          ul
+                            li
+                              code
+                                span :
+                                span.types= tag.types.join('|')
