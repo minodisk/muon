@@ -7,201 +7,198 @@
 </head>
 <body>
   <aside>
-    <h2>_Module</h2>
-    <ul>
-      <li><a href="#_Module.define">define</a></li>
-      <li><a href="#_Module.require">require</a></li>
-      <li><a href="#_Module.Module">Module</a></li>
-      <li><a href="#_Module.extend">extend</a></li>
-      <li><a href="#_Module.mix">mix</a></li>
-      <li><a href="#_Module.bind">bind</a></li>
-    </ul>
-    <h2>errors.ErrorMessage</h2>
-    <ul>
-      <li><a href="#errors.ErrorMessage.ErrorMessage">ErrorMessage</a></li>
-    </ul>
-    <h2>events.Event</h2>
-    <ul>
-      <li><a href="#events.Event.Event">Event</a></li>
-    </ul>
-    <h2>events.EventEmitter</h2>
-    <ul>
-      <li><a href="#events.EventEmitter.Event">Event</a></li>
-    </ul>
-    <h2>events.EventPhase</h2>
-    <ul>
-      <li><a href="#events.EventPhase.EventPhase">EventPhase</a></li>
-    </ul>
-    <h2>geom.Matrix</h2>
-    <ul>
-      <li><a href="#geom.Matrix.Point">Point</a></li>
-    </ul>
-    <h2>geom.Point</h2>
-    <ul>
-      <li><a href="#geom.Point.Matrix">Matrix</a></li>
-    </ul>
-    <h2>geom.Rectangle</h2>
-    <ul>
-      <li><a href="#geom.Rectangle.Matrix">Matrix</a></li>
-    </ul>
-    <h2>net.url</h2>
-    <ul>
-      <li><a href="#net.url.-">-</a></li>
-    </ul>
-    <h2>serializer.querystring</h2>
-    <ul>
-      <li><a href="#serializer.querystring.encode">encode</a></li>
-    </ul>
-    <h2>timers.Ticker</h2>
-    <ul>
-      <li><a href="#timers.Ticker.EventEmitter">EventEmitter</a></li>
-    </ul>
-    <h2>utils.array</h2>
-    <ul>
-      <li><a href="#utils.array.isArray">isArray</a></li>
-      <li><a href="#utils.array.lastIndexOf">lastIndexOf</a></li>
-      <li><a href="#utils.array.random">random</a></li>
-      <li><a href="#utils.array.shuffle">shuffle</a></li>
-    </ul>
+    <dl>
+      <dt><a href="#Module">Module</a></dt>
+      <dd><a href="#Module.define">define</a></dd>
+      <dd><a href="#Module.require">require</a></dd>
+      <dd><a href="#Module.Module">Module</a></dd>
+      <dd><a href="#Module.id">id</a></dd>
+      <dd><a href="#Module.definition">definition</a></dd>
+      <dd><a href="#Module.extend">extend</a></dd>
+      <dd><a href="#Module.mix">mix</a></dd>
+      <dd><a href="#Module.bind">bind</a></dd>
+      <dt><a href="#errors.ErrorMessage">errors.ErrorMessage</a></dt>
+      <dd><a href="#errors.ErrorMessage.ErrorMessage">ErrorMessage</a></dd>
+      <dt><a href="#events.Event">events.Event</a></dt>
+      <dd><a href="#events.Event.Event">Event</a></dd>
+      <dt><a href="#events.EventEmitter">events.EventEmitter</a></dt>
+      <dd><a href="#events.EventEmitter.Event">Event</a></dd>
+      <dt><a href="#events.EventPhase">events.EventPhase</a></dt>
+      <dd><a href="#events.EventPhase.EventPhase">EventPhase</a></dd>
+      <dt><a href="#geom.Matrix">geom.Matrix</a></dt>
+      <dd><a href="#geom.Matrix.Point">Point</a></dd>
+      <dt><a href="#geom.Point">geom.Point</a></dt>
+      <dd><a href="#geom.Point.Point">Point</a></dd>
+      <dd><a href="#geom.Point.x">x</a></dd>
+      <dd><a href="#geom.Point.y">y</a></dd>
+      <dt><a href="#geom.Rectangle">geom.Rectangle</a></dt>
+      <dd><a href="#geom.Rectangle.Matrix">Matrix</a></dd>
+      <dt><a href="#net.url">net.url</a></dt>
+      <dd><a href="#net.url.-">-</a></dd>
+      <dt><a href="#serializer.querystring">serializer.querystring</a></dt>
+      <dd><a href="#serializer.querystring.encode">encode</a></dd>
+      <dt><a href="#timers.Ticker">timers.Ticker</a></dt>
+      <dd><a href="#timers.Ticker.EventEmitter">EventEmitter</a></dd>
+      <dt><a href="#utils.array">utils.array</a></dt>
+      <dd><a href="#utils.array.isArray">isArray</a></dd>
+      <dd><a href="#utils.array.lastIndexOf">lastIndexOf</a></dd>
+      <dd><a href="#utils.array.random">random</a></dd>
+      <dd><a href="#utils.array.shuffle">shuffle</a></dd>
+    </dl>
   </aside>
   <div class="content">
     <h1>muon.js</h1>
     <dl>
-      <dt>_Module</dt>
+      <dt id="Module">Module</dt>
       <dd>
-        <ul>
-          <dl id="_Module.define">
-            <dt>define</dt>
-            <dd><p>Define module.</p></dd>
-            <ul>
-              <li><code><span class="param">id</span><span>:</span><span class="types">String</span></code></li>
-            </ul>
-            <ul>
-              <li><code><span class="param">definition</span><span>:</span><span class="types">Function|Object</span></code></li>
-            </ul>
-          </dl>
-          <dl id="_Module.require">
-            <dt>require</dt>
-            <dd><p>Require module.</p></dd>
-            <ul>
-              <li><code><span class="param">id</span><span>:</span><span class="types">String</span></code></li>
-            </ul>
-            <ul>
-              <li><code><span>:</span><span class="types">Object</span></code></li>
-            </ul>
-          </dl>
-          <dl id="_Module.extend">
-            <dt>extend</dt>
-            <dd><p>Extends classical prototype pattern object or modern module pattern object.<br /><code>Child.__super__</code> provides parent prototype.</p></dd>
-            <ul>
-              <li><code><span class="param">parent</span><span>:</span><span class="types">Function|Object</span></code></li>
-            </ul>
-            <ul>
-              <li><code><span class="param">child</span><span>:</span><span class="types">Function|Object</span></code></li>
-            </ul>
-            <ul>
-              <li><code><span>:</span><span class="types">Function|Object</span></code></li>
-            </ul>
-          </dl>
-          <dl id="_Module.mix">
-            <dt>mix</dt>
-            <dd><p>Mix properties.</p></dd>
-            <ul>
-              <li><code><span>:</span><span class="types">Object</span></code></li>
-            </ul>
-          </dl>
-          <dl id="_Module.bind">
-            <dt>bind</dt>
-            <dd><p>Bind context with inspected object.</p></dd>
-            <ul>
-              <li><code><span class="param">fn</span><span>:</span><span class="types">Function</span></code></li>
-            </ul>
-            <ul>
-              <li><code><span class="param">me</span><span>:</span><span class="types">Object</span></code></li>
-            </ul>
-            <ul>
-              <li><code><span>:</span><span class="types">Function</span></code></li>
-            </ul>
-          </dl>
-        </ul>
+        <dl id="Module.define">
+          <dt>define</dt>
+          <dd><code>define(id:String, definition:Function|Object):void</code></dd>
+          <dd><p>Define module.</p></dd>
+        </dl>
+        <dl id="Module.require">
+          <dt>require</dt>
+          <dd><code>require(id:String):Object</code></dd>
+          <dd><p>Require module.</p></dd>
+        </dl>
+        <dl id="Module.Module">
+          <dt>Module</dt>
+          <dd><code>Module(id:String, definition:Function|Object):void</code></dd>
+          <dd><p>Store named definition.</p></dd>
+        </dl>
+        <dl id="Module.id">
+          <dt>id</dt>
+          <dd><code>id:String</code></dd>
+          <dd><p>Module ID.</p></dd>
+        </dl>
+        <dl id="Module.definition">
+          <dt>definition</dt>
+          <dd><code>definition:Function|Object</code></dd>
+          <dd><p>Module definition.</p></dd>
+        </dl>
+        <dl id="Module.extend">
+          <dt>extend</dt>
+          <dd><code>extend(parent:Function|Object, child:Function|Object):Function|Object</code></dd>
+          <dd><p>Extends classical prototype pattern object or modern module pattern object.<br /><code>Child.__super__</code> provides parent prototype.</p></dd>
+        </dl>
+        <dl id="Module.mix">
+          <dt>mix</dt>
+          <dd><code>mix():Object</code></dd>
+          <dd><p>Mix properties.</p></dd>
+        </dl>
+        <dl id="Module.bind">
+          <dt>bind</dt>
+          <dd><code>bind(fn:Function, me:Object):Function</code></dd>
+          <dd><p>Bind context with inspected object.</p></dd>
+        </dl>
       </dd>
-      <dt>errors.ErrorMessage</dt>
+      <dt id="errors.ErrorMessage">errors.ErrorMessage</dt>
       <dd>
-        <ul>
-        </ul>
+        <dl id="errors.ErrorMessage.ErrorMessage">
+          <dt>ErrorMessage</dt>
+          <dd><code></code></dd>
+          <dd></dd>
+        </dl>
       </dd>
-      <dt>events.Event</dt>
+      <dt id="events.Event">events.Event</dt>
       <dd>
-        <ul>
-        </ul>
+        <dl id="events.Event.Event">
+          <dt>Event</dt>
+          <dd><code>Event():undefined</code></dd>
+          <dd></dd>
+        </dl>
       </dd>
-      <dt>events.EventEmitter</dt>
+      <dt id="events.EventEmitter">events.EventEmitter</dt>
       <dd>
-        <ul>
-        </ul>
+        <dl id="events.EventEmitter.Event">
+          <dt>Event</dt>
+          <dd><code></code></dd>
+          <dd></dd>
+        </dl>
       </dd>
-      <dt>events.EventPhase</dt>
+      <dt id="events.EventPhase">events.EventPhase</dt>
       <dd>
-        <ul>
-        </ul>
+        <dl id="events.EventPhase.EventPhase">
+          <dt>EventPhase</dt>
+          <dd><code></code></dd>
+          <dd></dd>
+        </dl>
       </dd>
-      <dt>geom.Matrix</dt>
+      <dt id="geom.Matrix">geom.Matrix</dt>
       <dd>
-        <ul>
-        </ul>
+        <dl id="geom.Matrix.Point">
+          <dt>Point</dt>
+          <dd><code></code></dd>
+          <dd></dd>
+        </dl>
       </dd>
-      <dt>geom.Point</dt>
+      <dt id="geom.Point">geom.Point</dt>
       <dd>
-        <ul>
-        </ul>
+        <dl id="geom.Point.Point">
+          <dt>Point</dt>
+          <dd><code>Point(x:Number, y:Number):void</code></dd>
+          <dd><p>Coordination position.</p></dd>
+        </dl>
+        <dl id="geom.Point.x">
+          <dt>x</dt>
+          <dd><code>x:Number</code></dd>
+          <dd><p>Horizontal position.</p></dd>
+        </dl>
+        <dl id="geom.Point.y">
+          <dt>y</dt>
+          <dd><code>y:Number</code></dd>
+          <dd><p>Vertical position.</p></dd>
+        </dl>
       </dd>
-      <dt>geom.Rectangle</dt>
+      <dt id="geom.Rectangle">geom.Rectangle</dt>
       <dd>
-        <ul>
-        </ul>
+        <dl id="geom.Rectangle.Matrix">
+          <dt>Matrix</dt>
+          <dd><code></code></dd>
+          <dd></dd>
+        </dl>
       </dd>
-      <dt>net.url</dt>
+      <dt id="net.url">net.url</dt>
       <dd>
-        <ul>
-        </ul>
       </dd>
-      <dt>serializer.querystring</dt>
+      <dt id="serializer.querystring">serializer.querystring</dt>
       <dd>
-        <ul>
-        </ul>
+        <dl id="serializer.querystring.encode">
+          <dt>encode</dt>
+          <dd><code></code></dd>
+          <dd></dd>
+        </dl>
       </dd>
-      <dt>timers.Ticker</dt>
+      <dt id="timers.Ticker">timers.Ticker</dt>
       <dd>
-        <ul>
-        </ul>
+        <dl id="timers.Ticker.EventEmitter">
+          <dt>EventEmitter</dt>
+          <dd><code></code></dd>
+          <dd></dd>
+        </dl>
       </dd>
-      <dt>utils.array</dt>
+      <dt id="utils.array">utils.array</dt>
       <dd>
-        <ul>
-          <dl id="utils.array.random">
-            <dt>random</dt>
-            <dd><p>Select value in a random drawing.</p></dd>
-            <ul>
-              <li><code><span class="param">arr</span><span>:</span><span class="types">Array</span></code></li>
-            </ul>
-            <ul>
-              <li><code><span class="param">length</span><span>:</span><span class="types">Number</span></code></li>
-            </ul>
-            <ul>
-              <li><code><span>:</span><span class="types">*|Array</span></code></li>
-            </ul>
-          </dl>
-          <dl id="utils.array.shuffle">
-            <dt>shuffle</dt>
-            <dd><p>Shuffle array</p></dd>
-            <ul>
-              <li><code><span class="param"></span><span>:</span><span class="types">arr</span></code></li>
-            </ul>
-            <ul>
-              <li><code><span>:</span><span class="types">*</span></code></li>
-            </ul>
-          </dl>
-        </ul>
+        <dl id="utils.array.isArray">
+          <dt>isArray</dt>
+          <dd><code>isArray:undefined</code></dd>
+          <dd><p>@type {*|Function}</p></dd>
+        </dl>
+        <dl id="utils.array.lastIndexOf">
+          <dt>lastIndexOf</dt>
+          <dd><code>lastIndexOf:undefined</code></dd>
+          <dd><p>should be tested</p></dd>
+        </dl>
+        <dl id="utils.array.random">
+          <dt>random</dt>
+          <dd><code>random(arr:Array, length:Number):*|Array</code></dd>
+          <dd><p>Select value in a random drawing.</p></dd>
+        </dl>
+        <dl id="utils.array.shuffle">
+          <dt>shuffle</dt>
+          <dd><code>shuffle(arr:Array):*</code></dd>
+          <dd><p>Shuffle array</p></dd>
+        </dl>
       </dd>
     </dl>
   </div>

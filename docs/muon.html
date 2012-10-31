@@ -70,7 +70,15 @@
         <span class="p">}</span>
         <span class="nx">__modules</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
   
+        <span class="cm">/**</span>
+<span class="cm">         * Module ID.</span>
+<span class="cm">         * @type {String}</span>
+<span class="cm">         */</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
+        <span class="cm">/**</span>
+<span class="cm">         * Module definition.</span>
+<span class="cm">         * @type {Function|Object}</span>
+<span class="cm">         */</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">definition</span> <span class="o">=</span> <span class="nx">definition</span><span class="p">;</span>
       <span class="p">}</span>
   
@@ -501,8 +509,23 @@
       <span class="k">return</span> <span class="k">new</span> <span class="nx">Point</span><span class="p">(</span><span class="nx">src</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="p">(</span><span class="nx">dst</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">src</span><span class="p">.</span><span class="nx">x</span><span class="p">)</span> <span class="o">*</span> <span class="nx">ratio</span><span class="p">,</span> <span class="nx">src</span><span class="p">.</span><span class="nx">y</span> <span class="o">+</span> <span class="p">(</span><span class="nx">dst</span><span class="p">.</span><span class="nx">y</span> <span class="o">-</span> <span class="nx">src</span><span class="p">.</span><span class="nx">y</span><span class="p">)</span> <span class="o">*</span> <span class="nx">ratio</span><span class="p">);</span>
     <span class="p">};</span>
     
+    <span class="cm">/**</span>
+<span class="cm">     * Coordination position.</span>
+<span class="cm">     * @param {Number} x    Horizontal position.</span>
+<span class="cm">     * @param {Number} y    Vertical position.</span>
+<span class="cm">     * @constructor</span>
+<span class="cm">     */</span>
     <span class="kd">function</span> <span class="nx">Point</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+      <span class="cm">/**</span>
+<span class="cm">       * Horizontal position.</span>
+<span class="cm">       * @type {Number}</span>
+<span class="cm">       */</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="nx">x</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+    
+      <span class="cm">/**</span>
+<span class="cm">       * Vertical position.</span>
+<span class="cm">       * @type {Number}</span>
+<span class="cm">       */</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="nx">y</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
     <span class="p">}</span>
     
@@ -1110,7 +1133,7 @@
     
     <span class="cm">/**</span>
 <span class="cm">     * Shuffle array</span>
-<span class="cm">     * @param arr</span>
+<span class="cm">     * @param {Array} arr</span>
 <span class="cm">     * @return {*}</span>
 <span class="cm">     */</span>
     <span class="nx">exports</span><span class="p">.</span><span class="nx">shuffle</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">arr</span><span class="p">)</span> <span class="p">{</span>

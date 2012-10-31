@@ -59,7 +59,15 @@ var Module = (function () {
       }
       __modules[id] = this;
 
+      /**
+       * Module ID.
+       * @type {String}
+       */
       this.id = id;
+      /**
+       * Module definition.
+       * @type {Function|Object}
+       */
       this.definition = definition;
     }
 

@@ -147,7 +147,7 @@ exports.random = function (arr, length) {
 
 /**
  * Shuffle array
- * @param arr
+ * @param {Array} arr
  * @return {*}
  */
 exports.shuffle = function (arr) {

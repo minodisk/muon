@@ -45,8 +45,23 @@ Point.between = function (src, dst, ratio) {
   return new Point(src.x + (dst.x - src.x) * ratio, src.y + (dst.y - src.y) * ratio);
 };
 
+/**
+ * Coordination position.
+ * @param {Number} x    Horizontal position.
+ * @param {Number} y    Vertical position.
+ * @constructor
+ */
 function Point(x, y) {
+  /**
+   * Horizontal position.
+   * @type {Number}
+   */
   this.x = x != null ? x : 0;
+
+  /**
+   * Vertical position.
+   * @type {Number}
+   */
   this.y = y != null ? y : 0;
 }
 

@@ -1,3 +1,8 @@
+// Requirement
+// * docco http://jashkenas.github.com/docco/
+// * pygments http://pygments.org/
+// * dox https://github.com/visionmedia/dox
+// * jade https://github.com/visionmedia/jade
 (function () {
   "use strict";
 
@@ -50,13 +55,17 @@
         packageName = path.dirname(tmp);
         className = path.basename(tmp, path.extname(tmp));
         topLevel = className.charAt(0) === '_';
+        if (topLevel) {
+          while (className.charAt(0) === '_') {
+            className = className.substr(1);
+          }
+        }
         if (packageName === '.') {
           names = [className];
         } else {
           names = packageName.split('/');
           names.push(className);
         }
-
 
         file = {
           namespace: names.join('.'),
@@ -196,30 +205,58 @@
   function docAPI(files, template, output) {
     var modules = [];
     files.forEach(function (file) {
-      var comments = dox.parseComments(file.code);
-      file.comments = comments;
+      var module = {
+        namespace: file.namespace,
+        comments : dox.parseComments(file.code)
+      };
 
       console.log(file.namespace, '===========================================');
 
-      var functions = [];
-      comments.forEach(function (comment) {
-        if (comment.ctx) {
-          if (comment.ctx.type === 'function') {
-            functions.push(comment.ctx.name);
-          }
-        }
-      });
-      comments.forEach(function (comment) {
-        if (comment.ctx) {
-          console.log(comment.ctx.string, '---------------------------------------');
-          //          console.log('ctx:', comment.ctx.type);
-          //          console.log('ctx:', comment.ctx);
+      module.comments.forEach(function (comment) {
+        var ctx = comment.ctx
+          , tags = comment.tags
+          , params
+          , type;
+        if (ctx) {
+          console.log(ctx.string, '---------------------------------------');
+          //          console.log('ctx:', ctx.type);
+          console.log('ctx:', ctx);
           //          console.log('description:', comment.description.full);
-          //          comment.tags.forEach(function (tag) {
-          //            console.log('tag:', tag);
-          //          });
+          comment.tags.forEach(function (tag) {
+            console.log('tag:', tag);
+          });
+          if (tags) {
+            params = [];
+            tags.forEach(function (tag) {
+              switch (tag.type) {
+                case 'param':
+                  params.push(tag.name + ':' + tag.types.join('|'));
+                  break;
+                case 'return':
+                case 'type':
+                  type = tag.types.join('|');
+                  break;
+              }
+              if (type == null) {
+                type = 'void';
+              }
+            });
+            type = ':' + type;
+            switch (ctx.type) {
+              case 'function':
+              case 'method':
+                ctx.declaration = ctx.name + '(' + params.join(', ') + ')' + type;
+                break;
+              case 'property':
+                ctx.declaration = ctx.name + type;
+                break;
+            }
+          }
+          console.log('declaration:', ctx.declaration);
         }
       });
+
+      modules.push(module);
     });
 
     var gen = jade.compile(fs.readFileSync(template), {
@@ -227,7 +264,7 @@
       pretty      : true
     });
     fs.writeFileSync(output, gen({
-      files: files
+      modules: modules
     }), 'utf-8');
 
     util.print('jade: ', template, ' -> ', output);
